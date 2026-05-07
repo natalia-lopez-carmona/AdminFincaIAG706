@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}AdminAgro — Gestión Inteligente de Fincas{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Administra tu finca con inteligencia</h1>
+    <p>Organiza cultivos, animales, inventario, gastos y labores desde un solo lugar. Con el apoyo de AgriBot, tu asistente virtual agropecuario.</p>
+    <div class="hero-tags">
+      <span class="tag">🌱 Cultivos</span>
+      <span class="tag">🐄 Animales</span>
+      <span class="tag">📦 Inventario</span>
+      <span class="tag">📋 Labores</span>
+      <span class="tag">💰 Gastos</span>
+    </div>
+    <a href="#modulos" class="btn">Explorar módulos</a>
+  </div>
+  <div class="hero-icon">🌾</div>
+</section>
+
+<!-- MÓDULOS -->
+<section class="section" id="modulos">
+  <h2>Módulos de gestión</h2>
+  <p class="section-subtitle">Todo lo que necesitas para administrar tu finca de forma ordenada y eficiente.</p>
+
+  <div class="card-container">
+    <div class="card">
+      <div class="card-icon">🌱</div>
+      <h3>Cultivos</h3>
+      <p>Siembra, riego, fertilización, control de plagas y seguimiento de cosechas.</p>
+      <a href="/cultivos">Ver módulo →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🐄</div>
+      <h3>Animales</h3>
+      <p>Alimentación, sanidad, vacunación y seguimiento de producción pecuaria.</p>
+      <a href="/animales">Ver módulo →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <h3>Inventario</h3>
+      <p>Control de insumos, herramientas, medicamentos y bodega de la finca.</p>
+      <a href="/inventario">Ver módulo →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Labores</h3>
+      <p>Programación de actividades, asignación de tareas y calendario de finca.</p>
+      <a href="/labores">Ver módulo →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h3>Gastos</h3>
+      <p>Registro de costos, análisis de rentabilidad y control del flujo de caja.</p>
+      <a href="/gastos">Ver módulo →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🤖</div>
+      <h3>AgriBot</h3>
+      <p>Consulta al asistente virtual sobre cualquier tema de tu finca en cualquier momento.</p>
+      <a href="#" onclick="document.getElementById('chat-toggle').click(); return false;">Abrir chat →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="section section-alt">
+  <h2>¿Cómo funciona?</h2>
+  <p class="section-subtitle">Tres pasos para tomar el control de tu finca.</p>
+
+  <div class="info-grid">
+    <div class="info-block">
+      <h3>📝 1. Registra</h3>
+      <p>Anota cada actividad, gasto, ingreso y novedad de la finca. Lo que no se registra no se puede mejorar ni controlar.</p>
+    </div>
+    <div class="info-block">
+      <h3>📊 2. Analiza</h3>
+      <p>Revisa los indicadores clave: rendimiento por hectárea, costo por unidad producida y margen de ganancia por actividad.</p>
+    </div>
+    <div class="info-block">
+      <h3>✅ 3. Decide</h3>
+      <p>Con información ordenada, toma decisiones sobre qué sembrar, cuándo invertir, qué mejorar y cómo crecer de forma sostenible.</p>
+    </div>
+  </div>
+
+  <div class="tip-box" style="margin-top:40px">
+    <p>💡 <strong>Consejo:</strong> Usa AgriBot (el botón 🤖 en la esquina) para consultar sobre cultivos, sanidad animal, control de gastos, inventario o cualquier tema de tu finca en cualquier momento.</p>
+  </div>
+</section>
+
+{% endblock %}
