@@ -37,16 +37,20 @@
         <div class="msg bot">AgriBot: ¡Hola! Soy tu asistente agropecuario. ¿En qué puedo ayudarte?</div>
       </div>
       <form id="chatForm">
-        <input
-          type="text"
-          id="userInput"
-          placeholder="Escribe tu consulta..."
-          autocomplete="off"
-        />
+        <div class="chat-input-row">
+          <input
+            type="text"
+            id="userInput"
+            placeholder="Escribe tu consulta..."
+            autocomplete="off"
+          />
+          <button type="submit" class="chat-send-btn" title="Enviar">&#10148;</button>
+        </div>
       </form>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   <script>
     const chatToggle = document.getElementById("chat-toggle");

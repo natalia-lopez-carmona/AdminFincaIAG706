@@ -40,12 +40,23 @@ def get_client():
     return _client
 
 
-def predict_answer(user_text: str) -> str:
+def predict_answer(user_text: str, history: list = None) -> str:
     try:
         client = get_client()
+
+        contents = []
+        for msg in (history or []):
+            role = "user" if msg.get("role") == "user" else "model"
+            contents.append(
+                types.Content(role=role, parts=[types.Part(text=msg.get("content", ""))])
+            )
+        contents.append(
+            types.Content(role="user", parts=[types.Part(text=user_text)])
+        )
+
         response = client.models.generate_content(
             model=MODEL_NAME,
-            contents=user_text,
+            contents=contents,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 temperature=0.7,

@@ -29,10 +29,12 @@ def gastos():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_text = request.form.get("message", "")
+    data = request.get_json(force=True, silent=True) or {}
+    user_text = data.get("message", "")
+    history = data.get("history", [])
     if not user_text.strip():
         return jsonify({"response": "Por favor escribe algo para ayudarte."})
-    response = predict_answer(user_text)
+    response = predict_answer(user_text, history)
     return jsonify({"response": response})
 
 if __name__ == "__main__":
