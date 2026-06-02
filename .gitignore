@@ -7,3 +7,9 @@ env312/
 *.db
 .vscode/
 *.log
+.claude/
+
+# Archivos de referencia / duplicados en raíz
+/adminagro_v3.html
+/demo-app.html
+/demo-app-mobile.html

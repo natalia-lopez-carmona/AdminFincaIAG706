@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AdminAgro — Demo Móvil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── VARIABLES ── */
+:root {
+  --verde:        #1a7835;
+  --verde-medio:  #2d9940;
+  --verde-claro:  #5dbf4e;
+  --lima:         #f0e030;
+  --lima-claro:   #f5eb6e;
+  --naranja:      #f5a520;
+  --naranja-claro:#f7c050;
+  --crema:        #fdf8ee;
+  --blanco:       #ffffff;
+  --gris-claro:   #f2f6f0;
+  --gris-texto:   #3d4f3e;
+  --oscuro:       #0d2b3e;
+  --borde:        #cce4c0;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'Poppins', sans-serif; background: #1a1a2e; min-height: 100vh; }
+
+/* ── BOTÓN VOLVER ── */
+.back-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 9999;
+  background: #0d2b3e;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+  transition: background 0.2s;
+}
+.back-btn:hover { background: #1a7835; }
+
+/* ── ESCENARIO: fondo con múltiples teléfonos ── */
+.stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 3rem 2rem 4rem;
+  flex-wrap: wrap;
+}
+
+/* ── ETIQUETA DE PANTALLA ── */
+.screen-label {
+  text-align: center;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+
+/* ── MARCO DEL TELÉFONO ── */
+.phone-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.phone {
+  width: 375px;
+  height: 812px;
+  background: var(--gris-claro);
+  border-radius: 50px;
+  border: 10px solid #1c1c1e;
+  box-shadow:
+    0 0 0 2px #3a3a3c,
+    0 40px 80px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(255,255,255,0.05);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Notch */
+.phone-notch {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 126px; height: 30px;
+  background: #1c1c1e;
+  border-radius: 0 0 20px 20px;
+  z-index: 50;
+}
+
+/* Status bar */
+.status-bar {
+  height: 44px;
+  background: var(--verde);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 1.25rem 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 40;
+}
+
+/* Contenido scrollable */
+.phone-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  background: var(--gris-claro);
+}
+.phone-content::-webkit-scrollbar { display: none; }
+
+/* Bottom Nav */
+.bottom-nav {
+  height: 72px;
+  background: var(--blanco);
+  border-top: 1.5px solid var(--borde);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 0.5rem 8px;
+  flex-shrink: 0;
+}
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: var(--gris-texto);
+  padding: 0.3rem 0.85rem;
+  border-radius: 14px;
+  border: none;
+  background: none;
+  cursor: default;
+}
+.nav-btn .nav-ico { font-size: 1.3rem; }
+.nav-btn.active { color: var(--verde); background: #e8f5d6; }
+
+/* ── TOPBAR MÓVIL ── */
+.mob-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.1rem 0.6rem;
+  background: var(--blanco);
+  border-bottom: 1.5px solid var(--borde);
+}
+.mob-topbar-logo { height: 28px; width: auto; }
+.mob-topbar-right { display: flex; align-items: center; gap: 0.6rem; }
+.mob-icon-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid var(--borde); background: var(--blanco);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; position: relative;
+}
+.notif-dot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; background: var(--naranja); border-radius: 50%; }
+.mob-badge { background: var(--naranja); color: #fff; font-size: 0.55rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 2rem; }
+
+/* ── SECCIONES MÓVILES ── */
+.mob-section { padding: 1rem 1rem 0.5rem; }
+.mob-section-title { font-size: 0.72rem; font-weight: 700; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+
+/* ── GREETING ── */
+.mob-greeting {
+  background: linear-gradient(135deg, var(--verde) 0%, var(--verde-medio) 100%);
+  padding: 1.1rem 1.1rem 1.4rem;
+  color: #fff;
+}
+.mob-greeting-name { font-size: 1.1rem; font-weight: 800; }
+.mob-greeting-sub { font-size: 0.75rem; color: rgba(255,255,255,0.72); margin-top: 2px; }
+.mob-greeting-date { font-size: 0.68rem; color: rgba(255,255,255,0.55); margin-top: 1rem; }
+
+/* ── STAT CARDS SCROLL ── */
+.stats-scroll {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0 1rem 0.5rem;
+  scrollbar-width: none;
+}
+.stats-scroll::-webkit-scrollbar { display: none; }
+.stat-chip {
+  flex-shrink: 0;
+  width: 130px;
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 16px;
+  padding: 0.85rem;
+}
+.stat-chip.verde { background: var(--verde); border-color: var(--verde); }
+.stat-chip.naranja { background: var(--naranja); border-color: var(--naranja); }
+.stat-chip-label { font-size: 0.62rem; font-weight: 600; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-chip.verde .stat-chip-label,
+.stat-chip.naranja .stat-chip-label { color: rgba(255,255,255,0.7); }
+.stat-chip-ico { font-size: 1.3rem; margin: 0.3rem 0 0.2rem; }
+.stat-chip-val { font-size: 1.15rem; font-weight: 800; color: var(--oscuro); }
+.stat-chip.verde .stat-chip-val,
+.stat-chip.naranja .stat-chip-val { color: #fff; }
+.stat-chip-delta { font-size: 0.62rem; font-weight: 600; color: var(--verde-claro); margin-top: 1px; }
+.stat-chip.naranja .stat-chip-delta { color: rgba(255,255,255,0.8); }
+
+/* ── PANEL ── */
+.mob-panel {
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  margin: 0 1rem 0.85rem;
+}
+.mob-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+.mob-panel-title { font-size: 0.82rem; font-weight: 700; color: var(--oscuro); }
+.mob-panel-link { font-size: 0.68rem; font-weight: 600; color: var(--verde); }
+
+/* ── ACTIVIDAD ── */
+.act-item {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.6rem 0; border-bottom: 1px solid var(--gris-claro);
+}
+.act-item:last-child { border-bottom: none; }
+.act-ico { width: 34px; height: 34px; border-radius: 10px; background: var(--gris-claro); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+.act-info { flex: 1; }
+.act-title { font-size: 0.78rem; font-weight: 600; color: var(--oscuro); }
+.act-meta { font-size: 0.65rem; color: var(--gris-texto); }
+.act-val { font-size: 0.82rem; font-weight: 700; }
+.act-val.pos { color: var(--verde); }
+.act-val.neg { color: #c04040; }
+
+/* ── CHART WRAP ── */
+.chart-wrap { position: relative; height: 160px; }
+.donut-wrap { position: relative; height: 150px; max-width: 150px; margin: 0 auto; }
+
+/* ── PROGRESS ── */
+.prog-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+.prog-label { font-size: 0.72rem; font-weight: 500; width: 90px; flex-shrink: 0; color: var(--oscuro); }
+.prog-bar { flex: 1; height: 7px; background: var(--gris-claro); border-radius: 4px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 4px; }
+.prog-pct { font-size: 0.68rem; font-weight: 700; width: 30px; text-align: right; color: var(--oscuro); }
+
+/* ── PILLS ── */
+.pill { display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 2rem; }
+.pill-verde  { background: #e8f5d6; color: var(--verde); }
+.pill-naranja{ background: #fff3dc; color: #b07000; }
+.pill-rojo   { background: #fde8e8; color: #b03030; }
+.pill-gris   { background: var(--gris-claro); color: var(--gris-texto); }
+
+/* ── TABLA MÓVIL ── */
+.mob-table { width: 100%; border-collapse: collapse; }
+.mob-table th { font-size: 0.62rem; font-weight: 700; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0.5rem 0.6rem; text-align: left; border-bottom: 1.5px solid var(--borde); }
+.mob-table td { padding: 0.55rem 0.5rem; font-size: 0.75rem; color: var(--oscuro); border-bottom: 1px solid var(--gris-claro); }
+.mob-table tr:last-child td { border-bottom: none; }
+
+/* ── ANIMAL CARD ── */
+.animal-scroll { display: flex; gap: 0.75rem; overflow-x: auto; padding: 0 1rem 0.5rem; scrollbar-width: none; }
+.animal-scroll::-webkit-scrollbar { display: none; }
+.animal-chip {
+  flex-shrink: 0; width: 130px;
+  background: var(--blanco); border: 1.5px solid var(--borde);
+  border-radius: 16px; padding: 0.85rem 0.85rem 0.75rem;
+}
+.animal-emoji { font-size: 1.8rem; }
+.animal-id { font-size: 0.6rem; font-weight: 700; color: var(--gris-texto); text-transform: uppercase; margin-top: 0.25rem; }
+.animal-name { font-size: 0.82rem; font-weight: 700; color: var(--oscuro); margin: 2px 0; }
+.animal-meta { font-size: 0.65rem; color: var(--gris-texto); }
+.animal-prod { font-size: 0.95rem; font-weight: 800; color: var(--verde); margin-top: 0.3rem; }
+
+/* ── KANBAN VERTICAL ── */
+.kanban-col-mob { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 16px; margin-bottom: 0.75rem; overflow: hidden; }
+.kanban-col-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 0.7rem 1rem; border-bottom: 1px solid var(--gris-claro); }
+.kanban-col-title.pendiente { color: #b07000; background: #fff8e6; }
+.kanban-col-title.progreso  { color: var(--verde); background: #edfae8; }
+.kanban-col-title.hecho     { color: var(--gris-texto); background: var(--gris-claro); }
+.k-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 1rem; border-bottom: 1px solid var(--gris-claro); }
+.k-item:last-child { border-bottom: none; }
+.k-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.k-dot.pendiente { background: var(--naranja); }
+.k-dot.progreso  { background: var(--verde-claro); }
+.k-dot.hecho     { background: #bbb; }
+.k-text { flex: 1; }
+.k-title { font-size: 0.78rem; font-weight: 600; color: var(--oscuro); }
+.k-meta  { font-size: 0.65rem; color: var(--gris-texto); }
+
+/* ── FORM MÓVIL ── */
+.form-group { margin-bottom: 0.75rem; }
+.form-label { font-size: 0.68rem; font-weight: 600; color: var(--gris-texto); display: block; margin-bottom: 0.25rem; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 0.6rem 0.85rem;
+  border: 1.5px solid var(--borde); border-radius: 12px;
+  font-family: 'Poppins', sans-serif; font-size: 0.82rem;
+  color: var(--oscuro); background: var(--blanco); outline: none;
+}
+.form-textarea { resize: none; height: 70px; }
+.btn-primary { background: var(--verde); color: #fff; border: none; padding: 0.75rem; border-radius: 2rem; font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: default; width: 100%; }
+.btn-outline  { background: transparent; color: var(--verde); border: 1.5px solid var(--borde); padding: 0.7rem; border-radius: 2rem; font-family: 'Poppins', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: default; width: 100%; margin-top: 0.5rem; }
+
+/* ── CHAT MÓVIL ── */
+.mob-chat-top { background: var(--verde); padding: 0.9rem 1.1rem; display: flex; align-items: center; gap: 0.75rem; }
+.mob-chat-avatar { font-size: 1.5rem; }
+.mob-chat-name { font-weight: 700; font-size: 0.88rem; color: #fff; }
+.mob-chat-status { font-size: 0.65rem; color: rgba(255,255,255,0.68); }
+.mob-chat-body { padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; min-height: 480px; }
+.chat-msg { max-width: 82%; padding: 0.65rem 0.9rem; border-radius: 16px; font-size: 0.78rem; line-height: 1.55; }
+.chat-msg.bot { background: var(--blanco); border: 1px solid var(--borde); border-bottom-left-radius: 4px; align-self: flex-start; color: var(--oscuro); }
+.chat-msg.user { background: var(--verde); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+.msg-time { font-size: 0.6rem; color: var(--gris-texto); margin-top: 2px; }
+.msg-time.r { text-align: right; color: rgba(255,255,255,0.6); }
+.mob-chat-input { display: flex; gap: 0.6rem; padding: 0.85rem 1rem; border-top: 1.5px solid var(--borde); align-items: center; background: var(--blanco); }
+.mob-chat-input input { flex: 1; padding: 0.55rem 0.9rem; border: 1.5px solid var(--borde); border-radius: 2rem; font-family: 'Poppins', sans-serif; font-size: 0.78rem; outline: none; }
+.mob-chat-send { width: 36px; height: 36px; border-radius: 50%; background: var(--verde); color: #fff; border: none; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+
+/* ── INVENTARIO ALERTA ── */
+.inv-alert { display: flex; align-items: center; gap: 0.6rem; background: #fff8e6; border: 1.5px solid #f5d87a; border-radius: 12px; padding: 0.7rem 0.9rem; margin-bottom: 0.85rem; font-size: 0.75rem; font-weight: 500; color: var(--oscuro); }
+</style>
+</head>
+<body>
+
+<!-- BOTÓN VOLVER -->
+<a href="/" class="back-btn" title="Volver al sitio principal">← Volver a AdminAgro</a>
+
+<div class="stage">
+
+  <!-- ══════════════════════════
+       PANTALLA 1: DASHBOARD
+  ════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="screen-label">Dashboard</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>📶 🔋</span>
+      </div>
+
+      <!-- Topbar -->
+      <div class="mob-topbar">
+        <img src="chatbot/static/img/AdminAgro-Logo.png" alt="AdminAgro" class="mob-topbar-logo"/>
+        <div class="mob-topbar-right">
+          <span class="mob-badge">⭐ Premium</span>
+          <div class="mob-icon-btn">🔔<span class="notif-dot"></span></div>
+        </div>
+      </div>
+
+      <div class="phone-content">
+        <!-- Greeting -->
+        <div class="mob-greeting">
+          <div class="mob-greeting-name">👋 Buenos días, Jairo</div>
+          <div class="mob-greeting-sub">Finca El Porvenir · Villamaría, Caldas</div>
+          <div class="mob-greeting-date">Lunes, 2 de junio de 2025</div>
+        </div>
+
+        <!-- Stats scroll -->
+        <div style="height:0.85rem;"></div>
+        <div class="mob-section-title" style="padding-left:1rem;">Resumen del mes</div>
+        <div class="stats-scroll">
+          <div class="stat-chip verde">
+            <div class="stat-chip-label">Ingresos</div>
+            <div class="stat-chip-ico">💰</div>
+            <div class="stat-chip-val">$4,82M</div>
+            <div class="stat-chip-delta">↑ 18%</div>
+          </div>
+          <div class="stat-chip naranja">
+            <div class="stat-chip-label">Utilidad</div>
+            <div class="stat-chip-ico">📈</div>
+            <div class="stat-chip-val">$2,48M</div>
+            <div class="stat-chip-delta">Margen 51%</div>
+          </div>
+          <div class="stat-chip">
+            <div class="stat-chip-label">Gastos</div>
+            <div class="stat-chip-ico">📤</div>
+            <div class="stat-chip-val">$2,34M</div>
+            <div class="stat-chip-delta" style="color:var(--gris-texto);">↑ 6%</div>
+          </div>
+          <div class="stat-chip">
+            <div class="stat-chip-label">Leche hoy</div>
+            <div class="stat-chip-ico">🥛</div>
+            <div class="stat-chip-val">186 L</div>
+            <div class="stat-chip-delta" style="color:var(--verde-claro);">↑ 12 L</div>
+          </div>
+        </div>
+
+        <!-- Gráfica -->
+        <div style="height:0.85rem;"></div>
+        <div class="mob-panel">
+          <div class="mob-panel-header">
+            <span class="mob-panel-title">Ingresos vs Gastos</span>
+            <span class="mob-panel-link">6 meses</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chartDash"></canvas></div>
+        </div>
+
+        <!-- Actividad -->
+        <div class="mob-panel">
+          <div class="mob-panel-header">
+            <span class="mob-panel-title">Actividad reciente</span>
+            <span class="mob-panel-link">Ver todo</span>
+          </div>
+          <div class="act-item"><div class="act-ico">🥛</div><div class="act-info"><div class="act-title">Ordeño matutino</div><div class="act-meta">Hoy 5:30 AM · 12 vacas</div></div><div class="act-val pos">+$148.800</div></div>
+          <div class="act-item"><div class="act-ico">🌿</div><div class="act-info"><div class="act-title">Compra Urea 46%</div><div class="act-meta">Ayer · AgroSur</div></div><div class="act-val neg">-$220.000</div></div>
+          <div class="act-item"><div class="act-ico">💊</div><div class="act-info"><div class="act-title">Vacuna Aftosa</div><div class="act-meta">30 may · 22 bovinos</div></div><div class="act-val neg">-$88.000</div></div>
+          <div class="act-item"><div class="act-ico">🌱</div><div class="act-info"><div class="act-title">Venta plátano</div><div class="act-meta">28 may · 18 racimos</div></div><div class="act-val pos">+$360.000</div></div>
+        </div>
+
+        <!-- Rentabilidad -->
+        <div class="mob-panel" style="margin-bottom:1.5rem;">
+          <div class="mob-panel-header"><span class="mob-panel-title">Rentabilidad por actividad</span></div>
+          <div class="prog-row"><span class="prog-label">🥛 Lechería</span><div class="prog-bar"><div class="prog-fill" style="width:82%;background:var(--verde);"></div></div><span class="prog-pct">82%</span></div>
+          <div class="prog-row"><span class="prog-label">🌿 Cacao</span><div class="prog-bar"><div class="prog-fill" style="width:74%;background:var(--naranja);"></div></div><span class="prog-pct">74%</span></div>
+          <div class="prog-row"><span class="prog-label">🌱 Plátano</span><div class="prog-bar"><div class="prog-fill" style="width:67%;background:var(--verde-claro);"></div></div><span class="prog-pct">67%</span></div>
+          <div class="prog-row"><span class="prog-label">🥦 Hortalizas</span><div class="prog-bar"><div class="prog-fill" style="width:41%;background:#bbb;"></div></div><span class="prog-pct">41%</span></div>
+        </div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav">
+        <div class="nav-btn active"><span class="nav-ico">🏠</span>Inicio</div>
+        <div class="nav-btn"><span class="nav-ico">🌱</span>Cultivos</div>
+        <div class="nav-btn"><span class="nav-ico">💰</span>Gastos</div>
+        <div class="nav-btn"><span class="nav-ico">📋</span>Labores</div>
+        <div class="nav-btn"><span class="nav-ico">🤖</span>AgriBot</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       PANTALLA 2: GASTOS
+  ════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="screen-label">Gastos y Finanzas</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+
+      <div class="mob-topbar">
+        <span style="font-size:0.95rem;font-weight:800;color:var(--oscuro);">💰 Gastos</span>
+        <div class="mob-icon-btn" style="background:var(--naranja);border-color:var(--naranja);color:#fff;font-size:0.7rem;font-weight:700;width:auto;padding:0 0.75rem;border-radius:2rem;">+ Registrar</div>
+      </div>
+
+      <div class="phone-content">
+        <!-- Stats -->
+        <div style="height:0.85rem;"></div>
+        <div class="stats-scroll">
+          <div class="stat-chip verde"><div class="stat-chip-label">Ingresos</div><div class="stat-chip-ico">💵</div><div class="stat-chip-val">$4,82M</div><div class="stat-chip-delta">Junio 2025</div></div>
+          <div class="stat-chip"><div class="stat-chip-label">Gastos</div><div class="stat-chip-ico">📤</div><div class="stat-chip-val">$2,34M</div></div>
+          <div class="stat-chip naranja"><div class="stat-chip-label">Utilidad</div><div class="stat-chip-ico">📊</div><div class="stat-chip-val">$2,48M</div><div class="stat-chip-delta">Margen 51%</div></div>
+        </div>
+
+        <!-- Donut -->
+        <div style="height:0.85rem;"></div>
+        <div class="mob-panel">
+          <div class="mob-panel-header"><span class="mob-panel-title">Distribución de gastos</span></div>
+          <div class="donut-wrap"><canvas id="chartGastosMob"></canvas></div>
+          <div style="height:0.85rem;"></div>
+          <div class="prog-row"><span class="prog-label" style="width:100px;">Alim. animal</span><div class="prog-bar"><div class="prog-fill" style="width:62%;background:var(--verde);"></div></div><span class="prog-pct">62%</span></div>
+          <div class="prog-row"><span class="prog-label" style="width:100px;">Mano de obra</span><div class="prog-bar"><div class="prog-fill" style="width:18%;background:var(--naranja);"></div></div><span class="prog-pct">18%</span></div>
+          <div class="prog-row"><span class="prog-label" style="width:100px;">Insumos agr.</span><div class="prog-bar"><div class="prog-fill" style="width:12%;background:var(--verde-claro);"></div></div><span class="prog-pct">12%</span></div>
+          <div class="prog-row"><span class="prog-label" style="width:100px;">Otros</span><div class="prog-bar"><div class="prog-fill" style="width:8%;background:#bbb;"></div></div><span class="prog-pct">8%</span></div>
+        </div>
+
+        <!-- Tabla gastos -->
+        <div class="mob-panel" style="margin-bottom:1.5rem;">
+          <div class="mob-panel-header"><span class="mob-panel-title">Últimos gastos</span><span class="mob-panel-link">Ver todo</span></div>
+          <table class="mob-table">
+            <thead><tr><th>Descripción</th><th>Categoría</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td>Concentrado 18%</td><td><span class="pill pill-verde">Animal</span></td><td><strong>$820.000</strong></td></tr>
+              <tr><td>Vacuna Aftosa ×22</td><td><span class="pill pill-naranja">Sanidad</span></td><td><strong>$92.400</strong></td></tr>
+              <tr><td>Jornales deshierbe</td><td><span class="pill pill-gris">M. obra</span></td><td><strong>$100.000</strong></td></tr>
+              <tr><td>Urea 46% 100 kg</td><td><span class="pill pill-verde">Insumo</span></td><td><strong>$220.000</strong></td></tr>
+              <tr><td>Flete insumos</td><td><span class="pill pill-gris">Transp.</span></td><td><strong>$80.000</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-btn"><span class="nav-ico">🏠</span>Inicio</div>
+        <div class="nav-btn"><span class="nav-ico">🌱</span>Cultivos</div>
+        <div class="nav-btn active"><span class="nav-ico">💰</span>Gastos</div>
+        <div class="nav-btn"><span class="nav-ico">📋</span>Labores</div>
+        <div class="nav-btn"><span class="nav-ico">🤖</span>AgriBot</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       PANTALLA 3: LABORES
+  ════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="screen-label">Labores</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+
+      <div class="mob-topbar">
+        <span style="font-size:0.95rem;font-weight:800;color:var(--oscuro);">📋 Labores</span>
+        <div class="mob-icon-btn" style="background:var(--verde);border-color:var(--verde);color:#fff;font-size:0.7rem;font-weight:700;width:auto;padding:0 0.75rem;border-radius:2rem;">+ Nueva</div>
+      </div>
+
+      <div class="phone-content">
+        <div style="height:0.85rem;"></div>
+        <div class="stats-scroll">
+          <div class="stat-chip"><div class="stat-chip-label">Pendientes</div><div class="stat-chip-ico">⏳</div><div class="stat-chip-val">5</div></div>
+          <div class="stat-chip verde"><div class="stat-chip-label">En progreso</div><div class="stat-chip-ico">🔄</div><div class="stat-chip-val">3</div></div>
+          <div class="stat-chip"><div class="stat-chip-label">Completadas</div><div class="stat-chip-ico">✅</div><div class="stat-chip-val">12</div><div class="stat-chip-delta" style="color:var(--gris-texto);">Esta semana</div></div>
+        </div>
+
+        <div style="height:0.85rem;"></div>
+
+        <!-- Pendientes -->
+        <div style="padding: 0 1rem;">
+          <div class="kanban-col-mob">
+            <div class="kanban-col-title pendiente">⏳ Pendientes (5)</div>
+            <div class="k-item"><div class="k-dot pendiente"></div><div class="k-text"><div class="k-title">Fertilización Lote C — Maíz</div><div class="k-meta">📅 4 jun · Urea 46%, 40 kg · Pedro R.</div></div><span class="pill pill-naranja">Alta</span></div>
+            <div class="k-item"><div class="k-dot pendiente"></div><div class="k-text"><div class="k-title">Compra ivermectina</div><div class="k-meta">📅 3 jun · AgroSur · Jairo O.</div></div><span class="pill pill-rojo">Urgente</span></div>
+            <div class="k-item"><div class="k-dot pendiente"></div><div class="k-text"><div class="k-title">Revisión plagas cacao</div><div class="k-meta">📅 5 jun · Lote B · Carlos M.</div></div><span class="pill pill-naranja">Alta</span></div>
+          </div>
+
+          <!-- En progreso -->
+          <div class="kanban-col-mob">
+            <div class="kanban-col-title progreso">🔄 En progreso (3)</div>
+            <div class="k-item"><div class="k-dot progreso"></div><div class="k-text"><div class="k-title">Ordeño y registro diario</div><div class="k-meta">📅 2 jun · 12 vacas en producción</div></div><span class="pill pill-verde">Normal</span></div>
+            <div class="k-item"><div class="k-dot progreso"></div><div class="k-text"><div class="k-title">Deshierbe Lote A — Plátano</div><div class="k-meta">📅 2–3 jun · 2,0 ha · Cuadrilla</div></div><span class="pill pill-verde">Normal</span></div>
+            <div class="k-item"><div class="k-dot progreso"></div><div class="k-text"><div class="k-title">Mantenimiento bomba riego</div><div class="k-meta">📅 2 jun · Bodega · Pedro R.</div></div><span class="pill pill-gris">Rutina</span></div>
+          </div>
+
+          <!-- Hecho -->
+          <div class="kanban-col-mob" style="opacity:0.75;margin-bottom:1.5rem;">
+            <div class="kanban-col-title hecho">✅ Completadas (12)</div>
+            <div class="k-item"><div class="k-dot hecho"></div><div class="k-text"><div class="k-title">Vacuna Fiebre Aftosa</div><div class="k-meta">30 may · 22 bovinos ✓</div></div><span class="pill pill-gris">Hecho</span></div>
+            <div class="k-item"><div class="k-dot hecho"></div><div class="k-text"><div class="k-title">Venta plátano hartón</div><div class="k-meta">28 may · $360.000 ✓</div></div><span class="pill pill-gris">Hecho</span></div>
+            <div class="k-item"><div class="k-dot hecho"></div><div class="k-text"><div class="k-title">Análisis de suelo Lote C</div><div class="k-meta">25 may · Resultados OK ✓</div></div><span class="pill pill-gris">Hecho</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-btn"><span class="nav-ico">🏠</span>Inicio</div>
+        <div class="nav-btn"><span class="nav-ico">🌱</span>Cultivos</div>
+        <div class="nav-btn"><span class="nav-ico">💰</span>Gastos</div>
+        <div class="nav-btn active"><span class="nav-ico">📋</span>Labores</div>
+        <div class="nav-btn"><span class="nav-ico">🤖</span>AgriBot</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       PANTALLA 4: ANIMALES
+  ════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="screen-label">Animales</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+
+      <div class="mob-topbar">
+        <span style="font-size:0.95rem;font-weight:800;color:var(--oscuro);">🐄 Animales</span>
+        <div class="mob-icon-btn" style="background:var(--verde);border-color:var(--verde);color:#fff;font-size:0.7rem;font-weight:700;width:auto;padding:0 0.75rem;border-radius:2rem;">+ Registrar</div>
+      </div>
+
+      <div class="phone-content">
+        <div style="height:0.85rem;"></div>
+        <div class="stats-scroll">
+          <div class="stat-chip verde"><div class="stat-chip-label">Total hato</div><div class="stat-chip-ico">🐄</div><div class="stat-chip-val">22</div><div class="stat-chip-delta">18 hem · 4 mac</div></div>
+          <div class="stat-chip naranja"><div class="stat-chip-label">Leche hoy</div><div class="stat-chip-ico">🥛</div><div class="stat-chip-val">186 L</div><div class="stat-chip-delta">↑ 12 L</div></div>
+          <div class="stat-chip"><div class="stat-chip-label">Costo/litro</div><div class="stat-chip-ico">💲</div><div class="stat-chip-val">$580</div><div class="stat-chip-delta" style="color:var(--verde-claro);">Meta $620</div></div>
+          <div class="stat-chip"><div class="stat-chip-label">Prox. vacuna</div><div class="stat-chip-ico">💉</div><div class="stat-chip-val">18 jun</div></div>
+        </div>
+
+        <div style="height:0.85rem;"></div>
+        <div class="mob-section-title" style="padding-left:1rem;">Bovinos — Ficha individual</div>
+        <div class="animal-scroll">
+          <div class="animal-chip"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-001</div><div class="animal-name">La Pinta</div><div class="animal-meta">Holstein · 4 años</div><div class="animal-prod">18 L/día</div><span class="pill pill-verde">Saludable</span></div>
+          <div class="animal-chip"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-002</div><div class="animal-name">Mariposa</div><div class="animal-meta">Holstein · 3 años</div><div class="animal-prod">16 L/día</div><span class="pill pill-verde">Saludable</span></div>
+          <div class="animal-chip"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-003</div><div class="animal-name">Canela</div><div class="animal-meta">Normando · 5 años</div><div class="animal-prod">14 L/día</div><span class="pill pill-naranja">Rev. médica</span></div>
+          <div class="animal-chip"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-004</div><div class="animal-name">Sultana</div><div class="animal-meta">Holstein · 2 años</div><div class="animal-prod">12 L/día</div><span class="pill pill-verde">Saludable</span></div>
+          <div class="animal-chip"><div class="animal-emoji">🐂</div><div class="animal-id">#BOV-019</div><div class="animal-name">Titán</div><div class="animal-meta">Brahman · 3 años</div><div class="animal-prod">Reproductor</div><span class="pill pill-verde">Saludable</span></div>
+        </div>
+
+        <!-- Inventario sanidad -->
+        <div style="height:0.85rem;"></div>
+        <div class="mob-panel">
+          <div class="mob-panel-header"><span class="mob-panel-title">Calendario sanitario</span></div>
+          <table class="mob-table">
+            <thead><tr><th>Actividad</th><th>Fecha</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td>Vacuna Aftosa</td><td>18 jun</td><td><span class="pill pill-naranja">Próxima</span></td></tr>
+              <tr><td>Desparasitación</td><td>15 jul</td><td><span class="pill pill-gris">Programada</span></td></tr>
+              <tr><td>Vacuna Brucelosis</td><td>30 may ✓</td><td><span class="pill pill-verde">Hecha</span></td></tr>
+              <tr><td>Control garrapatas</td><td>2 jun</td><td><span class="pill pill-verde">En curso</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Registrar novedad -->
+        <div class="mob-panel" style="margin-bottom:1.5rem;">
+          <div class="mob-panel-header"><span class="mob-panel-title">Registrar novedad</span></div>
+          <div class="form-group"><label class="form-label">Animal</label><select class="form-select"><option>#BOV-001 — La Pinta</option><option>#BOV-003 — Canela</option></select></div>
+          <div class="form-group"><label class="form-label">Tipo de novedad</label><select class="form-select"><option>Registro producción</option><option>Tratamiento médico</option><option>Vacunación</option></select></div>
+          <div class="form-group"><label class="form-label">Observación</label><textarea class="form-textarea" placeholder="Ej: Se aplicó 8 mL ivermectina..."></textarea></div>
+          <button class="btn-primary">Guardar novedad</button>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-btn"><span class="nav-ico">🏠</span>Inicio</div>
+        <div class="nav-btn active"><span class="nav-ico">🌱</span>Animales</div>
+        <div class="nav-btn"><span class="nav-ico">💰</span>Gastos</div>
+        <div class="nav-btn"><span class="nav-ico">📋</span>Labores</div>
+        <div class="nav-btn"><span class="nav-ico">🤖</span>AgriBot</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       PANTALLA 5: AGRIBOT
+  ════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="screen-label">AgriBot IA</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+
+      <div class="phone-content" style="background:var(--blanco);display:flex;flex-direction:column;">
+        <div class="mob-chat-top">
+          <div class="mob-chat-avatar">🌾</div>
+          <div>
+            <div class="mob-chat-name">AgriBot — Asistente IA</div>
+            <div class="mob-chat-status">● En línea · Responde en segundos</div>
+          </div>
+        </div>
+
+        <div class="mob-chat-body" style="flex:1;">
+          <div>
+            <div class="chat-msg bot">¡Buenos días, Jairo! Hoy detecto <strong>2 insumos con stock bajo</strong> y su vacunación de Aftosa es el 18 jun. ¿En qué le ayudo?</div>
+            <div class="msg-time">AgriBot · 5:00 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg user">¿Cuánto me cuesta producir un litro de leche?</div>
+            <div class="msg-time r">Usted · 7:12 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg bot">Con sus registros de junio:<br><br>
+              🥛 <b>Producción:</b> 186 L/día<br>
+              💰 <b>Concentrado:</b> $820.000<br>
+              💊 <b>Sanidad:</b> $92.400<br>
+              👷 <b>Mano de obra:</b> ~$180.000<br><br>
+              <b>Costo actual: $580/litro ✅</b><br>
+              ¡Está bajo su meta de $620/L!
+            </div>
+            <div class="msg-time">AgriBot · 7:12 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg user">¿Plagas en el cacao?</div>
+            <div class="msg-time r">Usted · 7:15 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg bot">Para el CCN-51 revise:<br><br>
+              🐛 <b>Moniliasis:</b> retire frutos con manchas acuosas<br>
+              🪲 <b>Broca:</b> trampas con feromona cada 20 m<br>
+              🍂 <b>Escoba de bruja:</b> pode cojines con tijera desinfectada<br><br>
+              Frecuencia: <b>cada 15 días</b> en lluvia. ¿Le programo la alerta?
+            </div>
+            <div class="msg-time">AgriBot · 7:15 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg user">Sí, programa la alerta cada 15 días</div>
+            <div class="msg-time r">Usted · 7:16 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg bot">✅ ¡Listo! Alerta programada para revisión de plagas en cacao cada 15 días. La próxima será el <b>17 de junio</b>. La recibirá como notificación en la app.</div>
+            <div class="msg-time">AgriBot · 7:16 AM</div>
+          </div>
+        </div>
+
+        <div class="mob-chat-input">
+          <input type="text" placeholder="Pregúntele a AgriBot..."/>
+          <div class="mob-chat-send">➤</div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-btn"><span class="nav-ico">🏠</span>Inicio</div>
+        <div class="nav-btn"><span class="nav-ico">🌱</span>Cultivos</div>
+        <div class="nav-btn"><span class="nav-ico">💰</span>Gastos</div>
+        <div class="nav-btn"><span class="nav-ico">📋</span>Labores</div>
+        <div class="nav-btn active"><span class="nav-ico">🤖</span>AgriBot</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /stage -->
+
+<script>
+/* Gráfica dashboard */
+new Chart(document.getElementById('chartDash'), {
+  type: 'bar',
+  data: {
+    labels: ['Ene','Feb','Mar','Abr','May','Jun'],
+    datasets: [
+      { label: 'Ingresos', data: [3200,3450,3800,4100,4080,4820], backgroundColor: '#1a7835', borderRadius: 6, borderSkipped: false },
+      { label: 'Gastos',   data: [2100,2200,2050,2400,2210,2340], backgroundColor: '#f5a520', borderRadius: 6, borderSkipped: false },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { font: { family: 'Poppins', size: 9 }, boxWidth: 10, padding: 6 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { family: 'Poppins', size: 9 } } },
+      y: { grid: { color: '#f0f4ee' }, ticks: { font: { family: 'Poppins', size: 9 }, callback: v => '$' + (v/1000).toFixed(0) + 'k' } }
+    }
+  }
+});
+
+/* Donut gastos */
+new Chart(document.getElementById('chartGastosMob'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Alim. animal','Mano de obra','Insumos agr.','Otros'],
+    datasets: [{ data: [62,18,12,8], backgroundColor: ['#1a7835','#f5a520','#5dbf4e','#cce4c0'], borderWidth: 0, hoverOffset: 4 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '65%',
+    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 9 }, boxWidth: 9, padding: 6 } } }
+  }
+});
+</script>
+</body>
+</html>

@@ -4,8 +4,13 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>🐄 Manejo de Animales</h1>
-  <p>Alimentación, sanidad, vacunación y seguimiento de producción pecuaria en tu finca.</p>
+  <div class="ph-img">
+    <img src="{{ url_for('static', filename='img/animales-ganado.jpg') }}" alt="Ganado en potrero"/>
+  </div>
+  <div class="ph-content">
+    <h1>🐄 Manejo de Animales</h1>
+    <p>Alimentación, sanidad, vacunación y seguimiento de producción pecuaria en tu finca.</p>
+  </div>
 </div>
 
 <div class="page-content">

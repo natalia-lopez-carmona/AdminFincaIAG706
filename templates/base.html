@@ -5,12 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}AdminAgro{% endblock %}</title>
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
+  <!-- NAVBAR -->
   <nav class="navbar">
-    <a href="/" class="navbar-brand">🌾 AdminAgro</a>
+    <a href="/" class="navbar-brand">
+      <img src="{{ url_for('static', filename='img/AdminAgro-Logo.png') }}" alt="AdminAgro" class="logo-img">
+    </a>
     <ul>
       <li><a href="/">Inicio</a></li>
       <li><a href="/cultivos">Cultivos</a></li>
@@ -18,10 +24,89 @@
       <li><a href="/inventario">Inventario</a></li>
       <li><a href="/labores">Labores</a></li>
       <li><a href="/gastos">Gastos</a></li>
+      <li>
+        <a href="#" class="btn-nav"
+           onclick="document.getElementById('chat-toggle').click(); return false;">
+          AgriBot 🤖
+        </a>
+      </li>
     </ul>
   </nav>
 
   {% block content %}{% endblock %}
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+
+      <!-- Columna izquierda: marca + links -->
+      <div class="footer-brand-col">
+        <div class="footer-logo">
+          <img src="{{ url_for('static', filename='img/AdminAgro-Logo.png') }}" alt="AdminAgro" class="logo-img logo-img--footer">
+        </div>
+        <p class="footer-tagline">Gestión inteligente de fincas para el campo colombiano.</p>
+        <nav class="footer-links">
+          <a href="/cultivos">Cultivos</a>
+          <a href="/animales">Animales</a>
+          <a href="/inventario">Inventario</a>
+          <a href="/labores">Labores</a>
+          <a href="/gastos">Gastos</a>
+        </nav>
+      </div>
+
+      <!-- Columna derecha: formulario -->
+      <div class="footer-form-col">
+        <h3 class="footer-form-title">¿Quiere más información?</h3>
+        <p class="footer-form-sub">Déjenos sus datos y le contactamos pronto.</p>
+        <form id="footerContactForm" class="footer-form" onsubmit="submitFooterForm(event)">
+          <div class="ff-row">
+            <input type="text"   name="nombre"  placeholder="Su nombre"        required />
+            <input type="tel"    name="telefono" placeholder="Teléfono / WhatsApp" />
+          </div>
+          <input type="email" name="email" placeholder="Correo electrónico" required />
+          <select name="interes">
+            <option value="" disabled selected>¿Qué le interesa?</option>
+            <option>Plan Gratuito</option>
+            <option>Plan Premium</option>
+            <option>Demo personalizada</option>
+            <option>Otro</option>
+          </select>
+          <textarea name="mensaje" rows="3" placeholder="Mensaje (opcional)"></textarea>
+          <button type="submit" class="ff-btn">Enviar solicitud ✉</button>
+          <p id="ff-thanks" class="ff-thanks" style="display:none;">¡Gracias! Pronto nos comunicaremos con usted. 🌿</p>
+        </form>
+      </div>
+
+    </div><!-- /footer-inner -->
+    <div class="footer-copy">© 2025 AdminAgro — Gestión Inteligente de Fincas</div>
+  </footer>
+
+  <!-- BOTTOM NAV MOBILE -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <a href="/">
+        <span class="nav-icon">🏠</span>
+        Inicio
+      </a>
+      <a href="/cultivos">
+        <span class="nav-icon">🌱</span>
+        Cultivos
+      </a>
+      <a href="/animales">
+        <span class="nav-icon">🐄</span>
+        Animales
+      </a>
+      <a href="/labores">
+        <span class="nav-icon">📋</span>
+        Labores
+      </a>
+      <a href="#"
+         onclick="document.getElementById('chat-toggle').click(); return false;">
+        <span class="nav-icon">🤖</span>
+        AgriBot
+      </a>
+    </div>
+  </div>
 
   <!-- BOTÓN CHAT -->
   <button id="chat-toggle" class="chat-toggle" title="Hablar con AgriBot">🤖</button>
@@ -53,9 +138,9 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   <script>
-    const chatToggle = document.getElementById("chat-toggle");
+    const chatToggle  = document.getElementById("chat-toggle");
     const chatWrapper = document.getElementById("chat-wrapper");
-    const chatClose = document.getElementById("chat-close");
+    const chatClose   = document.getElementById("chat-close");
 
     chatToggle.addEventListener("click", () => {
       chatWrapper.style.display = "flex";
@@ -65,6 +150,26 @@
     chatClose.addEventListener("click", () => {
       chatWrapper.style.display = "none";
     });
+
+    // Formulario footer
+    function submitFooterForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('footerContactForm');
+      const thanks = document.getElementById('ff-thanks');
+      form.querySelectorAll('input,select,textarea,button[type=submit]').forEach(el => el.disabled = true);
+      thanks.style.display = 'block';
+      // Aquí puede conectar con un endpoint Flask o servicio de email
+    }
+
+    // Marca el enlace activo en bottom nav
+    (function () {
+      const path = window.location.pathname;
+      document.querySelectorAll('.bottom-nav a[href]').forEach(function (a) {
+        if (a.getAttribute('href') === path) {
+          a.classList.add('active');
+        }
+      });
+    })();
   </script>
 
 </body>

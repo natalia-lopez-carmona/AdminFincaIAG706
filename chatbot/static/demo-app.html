@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AdminAgro — Demo Aplicación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── VARIABLES ── */
+:root {
+  --verde:        #1a7835;
+  --verde-medio:  #2d9940;
+  --verde-claro:  #5dbf4e;
+  --lima:         #f0e030;
+  --lima-claro:   #f5eb6e;
+  --naranja:      #f5a520;
+  --naranja-claro:#f7c050;
+  --crema:        #fdf8ee;
+  --blanco:       #ffffff;
+  --gris-claro:   #f2f6f0;
+  --gris-texto:   #3d4f3e;
+  --oscuro:       #0d2b3e;
+  --borde:        #cce4c0;
+  --sidebar-w:    240px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+/* ── BOTÓN VOLVER ── */
+.back-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 9999;
+  background: #0d2b3e;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  transition: background 0.2s;
+}
+.back-btn:hover { background: #1a7835; }
+body{font-family:'Poppins',sans-serif;background:var(--gris-claro);color:var(--oscuro);display:flex;min-height:100vh;overflow-x:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--oscuro);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;
+  z-index:200;overflow-y:auto;
+}
+.sidebar-logo{
+  padding:1.4rem 1.5rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.sidebar-logo img{height:36px;width:auto;filter:brightness(0) invert(1);}
+
+.sidebar-section{
+  padding:1.1rem 1rem 0.4rem;
+  font-size:0.62rem;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:rgba(255,255,255,0.35);
+}
+.sidebar nav{flex:1;padding:0.5rem 0.75rem;}
+.nav-item{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.6rem 0.85rem;border-radius:12px;
+  color:rgba(255,255,255,0.65);font-size:0.85rem;font-weight:500;
+  cursor:pointer;transition:background .2s,color .2s;margin-bottom:2px;
+  border:none;background:none;width:100%;text-align:left;
+}
+.nav-item .ni{font-size:1.1rem;width:22px;text-align:center;}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:#fff;}
+.nav-item.active{background:var(--verde);color:#fff;font-weight:600;}
+
+.sidebar-footer{
+  padding:1rem 1.5rem 1.5rem;
+  border-top:1px solid rgba(255,255,255,0.08);
+  font-size:0.75rem;color:rgba(255,255,255,0.35);
+}
+.user-chip{
+  display:flex;align-items:center;gap:0.6rem;
+  background:rgba(255,255,255,0.06);border-radius:12px;
+  padding:0.6rem 0.85rem;margin-bottom:0.75rem;
+}
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--verde);display:flex;align-items:center;justify-content:center;
+  font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.user-name{font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.85);}
+.user-plan{font-size:0.68rem;color:var(--naranja);}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--blanco);border-bottom:1.5px solid var(--borde);
+  padding:0 2rem;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-title{font-size:1.1rem;font-weight:700;color:var(--oscuro);}
+.topbar-right{display:flex;align-items:center;gap:1rem;}
+.topbar-date{font-size:0.78rem;color:var(--gris-texto);}
+.badge-plan{
+  background:var(--naranja);color:#fff;
+  font-size:0.65rem;font-weight:700;letter-spacing:0.06em;
+  padding:0.2rem 0.7rem;border-radius:2rem;
+}
+.btn-notif{
+  width:36px;height:36px;border-radius:50%;border:1.5px solid var(--borde);
+  background:var(--blanco);display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:pointer;position:relative;
+}
+.notif-dot{
+  position:absolute;top:4px;right:4px;
+  width:8px;height:8px;background:var(--naranja);border-radius:50%;
+}
+
+/* ── CONTENT ── */
+.content{padding:2rem;flex:1;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── SECTION TITLE ── */
+.page-title{font-size:1.4rem;font-weight:800;color:var(--oscuro);margin-bottom:0.25rem;}
+.page-sub{font-size:0.85rem;color:var(--gris-texto);margin-bottom:1.75rem;}
+
+/* ── STAT CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem;}
+.stat-card{
+  background:var(--blanco);border:1.5px solid var(--borde);
+  border-radius:18px;padding:1.25rem 1.4rem;
+}
+.stat-label{font-size:0.72rem;font-weight:600;color:var(--gris-texto);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;}
+.stat-value{font-size:1.9rem;font-weight:800;color:var(--oscuro);line-height:1;}
+.stat-delta{font-size:0.75rem;font-weight:600;margin-top:0.4rem;}
+.stat-delta.up{color:var(--verde-claro);}
+.stat-delta.down{color:#e05050;}
+.stat-icon{font-size:1.8rem;float:right;margin-top:-2.2rem;}
+
+.stat-card.accent-verde{background:var(--verde);border-color:var(--verde);}
+.stat-card.accent-verde .stat-label{color:rgba(255,255,255,0.65);}
+.stat-card.accent-verde .stat-value{color:#fff;}
+.stat-card.accent-verde .stat-delta{color:var(--lima-claro);}
+
+.stat-card.accent-naranja{background:var(--naranja);border-color:var(--naranja);}
+.stat-card.accent-naranja .stat-label{color:rgba(255,255,255,0.65);}
+.stat-card.accent-naranja .stat-value{color:#fff;}
+.stat-card.accent-naranja .stat-delta{color:#fff3cc;}
+
+/* ── GRID 2 COL ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;}
+.grid-6-4{display:grid;grid-template-columns:6fr 4fr;gap:1.25rem;margin-bottom:1.25rem;}
+
+/* ── CARD PANEL ── */
+.panel{
+  background:var(--blanco);border:1.5px solid var(--borde);
+  border-radius:18px;padding:1.4rem 1.5rem;
+}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.25rem;
+}
+.panel-title{font-size:0.92rem;font-weight:700;color:var(--oscuro);}
+.panel-link{font-size:0.75rem;font-weight:600;color:var(--verde);text-decoration:none;cursor:pointer;}
+
+/* ── TABLA ── */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{
+  font-size:0.72rem;font-weight:700;color:var(--gris-texto);
+  text-transform:uppercase;letter-spacing:0.06em;
+  padding:0 0.75rem 0.75rem;text-align:left;
+  border-bottom:1.5px solid var(--borde);
+}
+.tbl td{
+  padding:0.7rem 0.75rem;font-size:0.82rem;color:var(--oscuro);
+  border-bottom:1px solid var(--gris-claro);
+}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--gris-claro);}
+
+/* ── PILLS / BADGES ── */
+.pill{
+  display:inline-block;font-size:0.68rem;font-weight:700;
+  padding:0.22rem 0.65rem;border-radius:2rem;
+}
+.pill-verde  {background:#e8f5d6;color:var(--verde);}
+.pill-naranja{background:#fff3dc;color:#c47800;}
+.pill-rojo   {background:#fde8e8;color:#b83030;}
+.pill-gris   {background:var(--gris-claro);color:var(--gris-texto);}
+
+/* ── PROGRESS ── */
+.progress-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem;}
+.progress-label{font-size:0.8rem;font-weight:500;width:110px;flex-shrink:0;}
+.progress-bar{flex:1;height:8px;background:var(--gris-claro);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:4px;transition:width .4s;}
+.progress-pct{font-size:0.75rem;font-weight:700;width:38px;text-align:right;color:var(--oscuro);}
+
+/* ── ACTIVIDAD RECIENTE ── */
+.activity-item{
+  display:flex;align-items:flex-start;gap:0.85rem;
+  padding:0.75rem 0;border-bottom:1px solid var(--gris-claro);
+}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{
+  width:36px;height:36px;border-radius:12px;
+  background:var(--gris-claro);display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.act-title{font-size:0.82rem;font-weight:600;color:var(--oscuro);}
+.act-meta{font-size:0.72rem;color:var(--gris-texto);margin-top:2px;}
+.act-amount{font-size:0.85rem;font-weight:700;margin-left:auto;white-space:nowrap;}
+.act-amount.pos{color:var(--verde);}
+.act-amount.neg{color:#c04040;}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.25rem;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:0.75rem;font-weight:600;color:var(--gris-texto);}
+.form-input,.form-select,.form-textarea{
+  padding:0.6rem 0.9rem;border:1.5px solid var(--borde);border-radius:10px;
+  font-family:'Poppins',sans-serif;font-size:0.85rem;color:var(--oscuro);
+  background:var(--blanco);outline:none;transition:border-color .2s;width:100%;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--verde-claro);}
+.form-textarea{resize:vertical;min-height:80px;}
+
+/* ── BOTONES ── */
+.btn-primary{
+  background:var(--verde);color:#fff;border:none;
+  padding:0.65rem 1.5rem;border-radius:2rem;
+  font-family:'Poppins',sans-serif;font-size:0.85rem;font-weight:700;
+  cursor:pointer;transition:background .2s;
+}
+.btn-primary:hover{background:var(--verde-medio);}
+.btn-secondary-outline{
+  background:transparent;color:var(--verde);
+  border:1.5px solid var(--borde);
+  padding:0.65rem 1.5rem;border-radius:2rem;
+  font-family:'Poppins',sans-serif;font-size:0.85rem;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-secondary-outline:hover{border-color:var(--verde);background:#e8f5d6;}
+.btn-naranja{
+  background:var(--naranja);color:#fff;border:none;
+  padding:0.65rem 1.5rem;border-radius:2rem;
+  font-family:'Poppins',sans-serif;font-size:0.85rem;font-weight:700;
+  cursor:pointer;transition:background .2s;
+}
+.form-actions{display:flex;gap:0.75rem;margin-top:1.25rem;}
+
+/* ── ANIMALES FICHA ── */
+.animal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.animal-card{
+  background:var(--blanco);border:1.5px solid var(--borde);
+  border-radius:16px;padding:1.1rem 1.2rem;
+  display:flex;flex-direction:column;gap:0.35rem;
+}
+.animal-card:hover{box-shadow:0 8px 24px rgba(26,120,53,0.10);}
+.animal-emoji{font-size:2rem;margin-bottom:0.2rem;}
+.animal-id{font-size:0.68rem;font-weight:700;color:var(--gris-texto);text-transform:uppercase;letter-spacing:0.06em;}
+.animal-name{font-size:0.95rem;font-weight:700;color:var(--oscuro);}
+.animal-meta{font-size:0.75rem;color:var(--gris-texto);}
+.animal-prod{font-size:1.1rem;font-weight:800;color:var(--verde);}
+
+/* ── INVENTARIO ── */
+.inv-alert{
+  display:flex;align-items:center;gap:0.75rem;
+  background:#fff8e6;border:1.5px solid #f5d87a;border-radius:12px;
+  padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.82rem;font-weight:500;
+}
+
+/* ── GASTOS CHART ── */
+.chart-wrap{position:relative;height:220px;}
+.donut-wrap{position:relative;height:200px;max-width:200px;margin:0 auto;}
+
+/* ── CHATBOT ── */
+.chat-container{
+  max-width:680px;margin:0 auto;
+  background:var(--blanco);border:1.5px solid var(--borde);
+  border-radius:20px;overflow:hidden;
+}
+.chat-top{
+  background:var(--verde);padding:1rem 1.5rem;
+  display:flex;align-items:center;gap:0.85rem;
+}
+.chat-bot-avatar{font-size:1.6rem;}
+.chat-bot-name{font-weight:700;font-size:0.95rem;color:#fff;}
+.chat-bot-status{font-size:0.72rem;color:rgba(255,255,255,0.7);}
+.chat-body{padding:1.25rem;min-height:340px;display:flex;flex-direction:column;gap:0.85rem;}
+.chat-msg{max-width:78%;padding:0.75rem 1rem;border-radius:16px;font-size:0.85rem;line-height:1.55;}
+.chat-msg.bot{background:var(--gris-claro);border:1px solid var(--borde);border-bottom-left-radius:4px;align-self:flex-start;}
+.chat-msg.user{background:var(--verde);color:#fff;border-bottom-right-radius:4px;align-self:flex-end;}
+.chat-msg-time{font-size:0.65rem;color:var(--gris-texto);margin-top:2px;}
+.chat-msg.user .chat-msg-time{color:rgba(255,255,255,0.6);text-align:right;}
+.chat-input-area{
+  padding:1rem 1.25rem;border-top:1.5px solid var(--borde);
+  display:flex;gap:0.75rem;align-items:center;
+}
+.chat-input-area input{
+  flex:1;padding:0.6rem 1rem;border:1.5px solid var(--borde);
+  border-radius:2rem;font-family:'Poppins',sans-serif;font-size:0.85rem;
+  outline:none;
+}
+.chat-send{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--verde);color:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:pointer;
+}
+
+/* ── KANBAN LABORES ── */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.kanban-col{background:var(--gris-claro);border-radius:16px;padding:1rem;}
+.kanban-col-title{
+  font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+  padding-bottom:0.75rem;border-bottom:2px solid var(--borde);margin-bottom:0.75rem;
+}
+.kanban-col-title.pendiente{color:#c47800;}
+.kanban-col-title.progreso{color:var(--verde);}
+.kanban-col-title.hecho{color:var(--gris-texto);}
+.k-card{
+  background:var(--blanco);border:1.5px solid var(--borde);
+  border-radius:12px;padding:0.85rem 1rem;margin-bottom:0.65rem;
+}
+.k-card-title{font-size:0.82rem;font-weight:600;color:var(--oscuro);margin-bottom:0.35rem;}
+.k-card-meta{font-size:0.72rem;color:var(--gris-texto);}
+.k-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem;}
+</style>
+</head>
+<body>
+
+<!-- BOTÓN VOLVER -->
+<a href="/" class="back-btn" title="Volver al sitio principal">← Volver a AdminAgro</a>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="chatbot/static/img/AdminAgro-Logo.png" alt="AdminAgro"/>
+  </div>
+
+  <nav>
+    <div class="sidebar-section">Principal</div>
+    <button class="nav-item active" onclick="showPage('dashboard')">
+      <span class="ni">📊</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="showPage('cultivos')">
+      <span class="ni">🌱</span> Cultivos
+    </button>
+    <button class="nav-item" onclick="showPage('animales')">
+      <span class="ni">🐄</span> Animales
+    </button>
+    <button class="nav-item" onclick="showPage('inventario')">
+      <span class="ni">📦</span> Inventario
+    </button>
+    <button class="nav-item" onclick="showPage('labores')">
+      <span class="ni">📋</span> Labores
+    </button>
+    <button class="nav-item" onclick="showPage('gastos')">
+      <span class="ni">💰</span> Gastos
+    </button>
+    <div class="sidebar-section" style="margin-top:0.5rem;">Asistente</div>
+    <button class="nav-item" onclick="showPage('chatbot')">
+      <span class="ni">🤖</span> AgriBot IA
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="user-avatar">JO</div>
+      <div>
+        <div class="user-name">Jairo Ospina</div>
+        <div class="user-plan">⭐ Plan Premium</div>
+      </div>
+    </div>
+    Finca El Porvenir · Villamaría, Caldas
+  </div>
+</aside>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Dashboard General</div>
+    <div class="topbar-right">
+      <span class="topbar-date">Lunes, 2 de junio de 2025</span>
+      <span class="badge-plan">⭐ Premium</span>
+      <div class="btn-notif">🔔<span class="notif-dot"></span></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════ DASHBOARD ══════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-title">Buenos días, Jairo 👋</div>
+      <div class="page-sub">Resumen de Finca El Porvenir — Junio 2025</div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card accent-verde">
+          <div class="stat-label">Ingresos del mes</div>
+          <div class="stat-icon">💰</div>
+          <div class="stat-value">$4.820.000</div>
+          <div class="stat-delta up">↑ 18% vs mayo</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gastos del mes</div>
+          <div class="stat-icon">📤</div>
+          <div class="stat-value">$2.340.000</div>
+          <div class="stat-delta down">↑ 6% vs mayo</div>
+        </div>
+        <div class="stat-card accent-naranja">
+          <div class="stat-label">Utilidad neta</div>
+          <div class="stat-icon">📈</div>
+          <div class="stat-value">$2.480.000</div>
+          <div class="stat-delta up">Margen 51%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Litros de leche hoy</div>
+          <div class="stat-icon">🥛</div>
+          <div class="stat-value">186 L</div>
+          <div class="stat-delta up">↑ 12 L vs ayer</div>
+        </div>
+      </div>
+
+      <div class="grid-6-4">
+        <!-- Gráfica ingresos vs gastos -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Ingresos vs Gastos — Últimos 6 meses</span>
+            <span class="panel-link">Ver detalle</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chartIngGas"></canvas>
+          </div>
+        </div>
+        <!-- Actividad reciente -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Actividad reciente</span>
+            <span class="panel-link">Ver todo</span>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon">🥛</div>
+            <div>
+              <div class="act-title">Ordeño matutino</div>
+              <div class="act-meta">Hoy, 5:30 AM · 12 vacas</div>
+            </div>
+            <div class="act-amount pos">+$148.800</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon">🌿</div>
+            <div>
+              <div class="act-title">Compra fertilizante Urea</div>
+              <div class="act-meta">Ayer · Proveedor AgroSur</div>
+            </div>
+            <div class="act-amount neg">-$220.000</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon">💊</div>
+            <div>
+              <div class="act-title">Vacuna Fiebre Aftosa</div>
+              <div class="act-meta">30 may · 22 bovinos</div>
+            </div>
+            <div class="act-amount neg">-$88.000</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon">🌱</div>
+            <div>
+              <div class="act-title">Venta plátano hartón</div>
+              <div class="act-meta">28 may · 18 racimos</div>
+            </div>
+            <div class="act-amount pos">+$360.000</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon">🚜</div>
+            <div>
+              <div class="act-title">Jornal preparación suelo</div>
+              <div class="act-meta">27 may · 2 jornales</div>
+            </div>
+            <div class="act-amount neg">-$100.000</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Rentabilidad por actividad -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Rentabilidad por actividad</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">🥛 Lechería</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:82%;background:var(--verde);"></div></div>
+            <span class="progress-pct">82%</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">🌱 Plátano</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:67%;background:var(--verde-claro);"></div></div>
+            <span class="progress-pct">67%</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">🌿 Cacao</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:74%;background:var(--naranja);"></div></div>
+            <span class="progress-pct">74%</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">🥦 Hortalizas</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:41%;background:#aaa;"></div></div>
+            <span class="progress-pct">41%</span>
+          </div>
+        </div>
+        <!-- Distribución de gastos -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Distribución de gastos</span>
+          </div>
+          <div class="donut-wrap">
+            <canvas id="chartDonut"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ CULTIVOS ══════ -->
+    <div class="page" id="page-cultivos">
+      <div class="page-title">🌱 Cultivos</div>
+      <div class="page-sub">Seguimiento de lotes y ciclos productivos</div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="stat-card"><div class="stat-label">Lotes activos</div><div class="stat-icon">🌿</div><div class="stat-value">4</div></div>
+        <div class="stat-card accent-verde"><div class="stat-label">Área total</div><div class="stat-icon">📐</div><div class="stat-value">6,5 ha</div></div>
+        <div class="stat-card"><div class="stat-label">Próx. cosecha</div><div class="stat-icon">🚜</div><div class="stat-value">12 días</div></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:1.25rem;">
+        <div class="panel-header">
+          <span class="panel-title">Lotes registrados</span>
+          <button class="btn-primary" style="font-size:0.78rem;padding:0.45rem 1.1rem;">+ Nuevo lote</button>
+        </div>
+        <table class="tbl">
+          <thead><tr>
+            <th>Lote</th><th>Cultivo</th><th>Área</th><th>Siembra</th><th>Est. cosecha</th><th>Fase</th><th>Estado</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><strong>Lote A</strong></td><td>Plátano Hartón</td><td>2,0 ha</td><td>15 ene 2025</td><td>15 jul 2025</td><td>Floración</td><td><span class="pill pill-verde">En curso</span></td></tr>
+            <tr><td><strong>Lote B</strong></td><td>Cacao CCN-51</td><td>1,5 ha</td><td>Mar 2023</td><td>Permanente</td><td>Producción</td><td><span class="pill pill-verde">En curso</span></td></tr>
+            <tr><td><strong>Lote C</strong></td><td>Maíz Amarillo</td><td>1,0 ha</td><td>5 abr 2025</td><td>14 jun 2025</td><td>Llenado grano</td><td><span class="pill pill-naranja">Próx. cosecha</span></td></tr>
+            <tr><td><strong>Lote D</strong></td><td>Pasto Kikuyo</td><td>2,0 ha</td><td>Permanente</td><td>—</td><td>Pastoreo rot.</td><td><span class="pill pill-verde">En curso</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Registrar labor de campo</span></div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">Lote</label>
+            <select class="form-select"><option>Lote A — Plátano</option><option>Lote B — Cacao</option><option>Lote C — Maíz</option></select></div>
+          <div class="form-group"><label class="form-label">Tipo de labor</label>
+            <select class="form-select"><option>Fertilización</option><option>Control plagas</option><option>Riego</option><option>Cosecha</option></select></div>
+          <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" value="2025-06-02"/></div>
+          <div class="form-group"><label class="form-label">Insumo aplicado</label><input type="text" class="form-input" placeholder="Ej: Urea 46%, 50 kg"/></div>
+          <div class="form-group"><label class="form-label">Costo ($)</label><input type="number" class="form-input" placeholder="0"/></div>
+          <div class="form-group"><label class="form-label">Responsable</label><input type="text" class="form-input" placeholder="Nombre del operario"/></div>
+          <div class="form-group full"><label class="form-label">Observaciones</label><textarea class="form-textarea" placeholder="Condiciones del cultivo, anomalías, etc."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary">Guardar registro</button>
+          <button class="btn-secondary-outline">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ ANIMALES ══════ -->
+    <div class="page" id="page-animales">
+      <div class="page-title">🐄 Animales</div>
+      <div class="page-sub">Hato ganadero — Finca El Porvenir</div>
+
+      <div class="stats-grid">
+        <div class="stat-card accent-verde"><div class="stat-label">Total bovinos</div><div class="stat-icon">🐄</div><div class="stat-value">22</div><div class="stat-delta up">18 hembras · 4 machos</div></div>
+        <div class="stat-card"><div class="stat-label">Producción hoy</div><div class="stat-icon">🥛</div><div class="stat-value">186 L</div><div class="stat-delta up">↑ 12 L vs ayer</div></div>
+        <div class="stat-card"><div class="stat-label">Costo/litro</div><div class="stat-icon">💲</div><div class="stat-value">$580</div><div class="stat-delta up">↓ $100 vs enero</div></div>
+        <div class="stat-card accent-naranja"><div class="stat-label">Próx. vacunación</div><div class="stat-icon">💉</div><div class="stat-value">18 jun</div><div class="stat-delta up">Aftosa — 22 bovinos</div></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:1.25rem;">
+        <div class="panel-header">
+          <span class="panel-title">Ficha de animales destacados</span>
+          <button class="btn-primary" style="font-size:0.78rem;padding:0.45rem 1.1rem;">+ Registrar animal</button>
+        </div>
+        <div class="animal-grid">
+          <div class="animal-card"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-001</div><div class="animal-name">La Pinta</div><div class="animal-meta">Holstein · 4 años · 420 kg</div><div class="animal-prod">18 L/día</div><span class="pill pill-verde">Saludable</span></div>
+          <div class="animal-card"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-002</div><div class="animal-name">Mariposa</div><div class="animal-meta">Holstein · 3 años · 390 kg</div><div class="animal-prod">16 L/día</div><span class="pill pill-verde">Saludable</span></div>
+          <div class="animal-card"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-003</div><div class="animal-name">Canela</div><div class="animal-meta">Normando · 5 años · 460 kg</div><div class="animal-prod">14 L/día</div><span class="pill pill-naranja">Rev. médica</span></div>
+          <div class="animal-card"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-004</div><div class="animal-name">Sultana</div><div class="animal-meta">Holstein · 2 años · 350 kg</div><div class="animal-prod">12 L/día</div><span class="pill pill-verde">Saludable</span></div>
+          <div class="animal-card"><div class="animal-emoji">🐂</div><div class="animal-id">#BOV-019</div><div class="animal-name">Titán</div><div class="animal-meta">Brahman · 3 años · 520 kg</div><div class="animal-prod">Reproductor</div><span class="pill pill-verde">Saludable</span></div>
+          <div class="animal-card"><div class="animal-emoji">🐄</div><div class="animal-id">#BOV-005</div><div class="animal-name">Fortuna</div><div class="animal-meta">Normando · 4 años · 430 kg</div><div class="animal-prod">15 L/día</div><span class="pill pill-verde">Saludable</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ INVENTARIO ══════ -->
+    <div class="page" id="page-inventario">
+      <div class="page-title">📦 Inventario</div>
+      <div class="page-sub">Control de insumos, herramientas y bodega</div>
+
+      <div class="inv-alert">
+        ⚠️ <strong>2 productos con stock bajo</strong> — Ivermectina 1% y Urea 46% están por debajo del mínimo definido.
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.25rem;">
+        <div class="stat-card"><div class="stat-label">Ítems en bodega</div><div class="stat-icon">📦</div><div class="stat-value">34</div></div>
+        <div class="stat-card accent-naranja"><div class="stat-label">Stock crítico</div><div class="stat-icon">⚠️</div><div class="stat-value">2</div><div class="stat-delta" style="color:#fff;">Requieren reposición</div></div>
+        <div class="stat-card accent-verde"><div class="stat-label">Valor inventario</div><div class="stat-icon">💲</div><div class="stat-value">$1.840.000</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Kardex de insumos</span>
+          <button class="btn-primary" style="font-size:0.78rem;padding:0.45rem 1.1rem;">+ Movimiento</button>
+        </div>
+        <table class="tbl">
+          <thead><tr>
+            <th>Producto</th><th>Categoría</th><th>Stock actual</th><th>Stock mín.</th><th>Últ. movimiento</th><th>Costo unit.</th><th>Estado</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><strong>Urea 46%</strong></td><td>Fertilizante</td><td>18 kg</td><td>50 kg</td><td>Salida 40 kg · 28 may</td><td>$2.200/kg</td><td><span class="pill pill-rojo">Stock bajo</span></td></tr>
+            <tr><td><strong>Ivermectina 1%</strong></td><td>Medicamento</td><td>80 mL</td><td>200 mL</td><td>Salida 120 mL · 30 may</td><td>$35/mL</td><td><span class="pill pill-rojo">Stock bajo</span></td></tr>
+            <tr><td><strong>Cal Dolomítica</strong></td><td>Enmienda</td><td>200 kg</td><td>50 kg</td><td>Entrada 200 kg · 20 may</td><td>$450/kg</td><td><span class="pill pill-verde">OK</span></td></tr>
+            <tr><td><strong>Herbicida Glifosato</strong></td><td>Agroquímico</td><td>5 L</td><td>2 L</td><td>Salida 1 L · 25 may</td><td>$28.000/L</td><td><span class="pill pill-verde">OK</span></td></tr>
+            <tr><td><strong>Concentrado 18%</strong></td><td>Alimento animal</td><td>8 bultos</td><td>5 bultos</td><td>Entrada 10 · 01 jun</td><td>$82.000/bto</td><td><span class="pill pill-verde">OK</span></td></tr>
+            <tr><td><strong>Vacuna Aftosa</strong></td><td>Biológico</td><td>25 dosis</td><td>25 dosis</td><td>Entrada 25 · 15 may</td><td>$4.200/dosis</td><td><span class="pill pill-naranja">Límite</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ LABORES ══════ -->
+    <div class="page" id="page-labores">
+      <div class="page-title">📋 Labores</div>
+      <div class="page-sub">Programación y seguimiento de actividades — Semana del 2 al 8 de junio</div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.5rem;">
+        <div class="stat-card"><div class="stat-label">Pendientes</div><div class="stat-icon">⏳</div><div class="stat-value">5</div></div>
+        <div class="stat-card accent-verde"><div class="stat-label">En progreso</div><div class="stat-icon">🔄</div><div class="stat-value">3</div></div>
+        <div class="stat-card"><div class="stat-label">Completadas</div><div class="stat-icon">✅</div><div class="stat-value">12</div><div class="stat-delta up">Esta semana</div></div>
+      </div>
+
+      <div class="kanban">
+        <!-- Pendientes -->
+        <div class="kanban-col">
+          <div class="kanban-col-title pendiente">⏳ Pendientes (5)</div>
+          <div class="k-card">
+            <div class="k-card-title">Fertilización Lote C — Maíz</div>
+            <div class="k-card-meta">📅 4 jun · 🌿 Urea 46%, 40 kg</div>
+            <div class="k-card-footer"><span class="pill pill-naranja">Alta</span><span style="font-size:0.72rem;color:var(--gris-texto);">Pedro R.</span></div>
+          </div>
+          <div class="k-card">
+            <div class="k-card-title">Revisión plagas cacao</div>
+            <div class="k-card-meta">📅 5 jun · 🌿 Lote B</div>
+            <div class="k-card-footer"><span class="pill pill-naranja">Alta</span><span style="font-size:0.72rem;color:var(--gris-texto);">Carlos M.</span></div>
+          </div>
+          <div class="k-card">
+            <div class="k-card-title">Compra ivermectina</div>
+            <div class="k-card-meta">📅 3 jun · 🏪 AgroSur Manizales</div>
+            <div class="k-card-footer"><span class="pill pill-rojo">Urgente</span><span style="font-size:0.72rem;color:var(--gris-texto);">Jairo O.</span></div>
+          </div>
+        </div>
+        <!-- En progreso -->
+        <div class="kanban-col">
+          <div class="kanban-col-title progreso">🔄 En progreso (3)</div>
+          <div class="k-card">
+            <div class="k-card-title">Ordeño y registro diario</div>
+            <div class="k-card-meta">📅 2 jun · 🐄 12 vacas en producción</div>
+            <div class="k-card-footer"><span class="pill pill-verde">Normal</span><span style="font-size:0.72rem;color:var(--gris-texto);">Ordeñador</span></div>
+          </div>
+          <div class="k-card">
+            <div class="k-card-title">Deshierbe Lote A — Plátano</div>
+            <div class="k-card-meta">📅 2–3 jun · 2,0 ha</div>
+            <div class="k-card-footer"><span class="pill pill-verde">Normal</span><span style="font-size:0.72rem;color:var(--gris-texto);">Cuadrilla</span></div>
+          </div>
+          <div class="k-card">
+            <div class="k-card-title">Mantenimiento bomba de riego</div>
+            <div class="k-card-meta">📅 2 jun · 🔧 Bodega principal</div>
+            <div class="k-card-footer"><span class="pill pill-gris">Rutina</span><span style="font-size:0.72rem;color:var(--gris-texto);">Pedro R.</span></div>
+          </div>
+        </div>
+        <!-- Hecho -->
+        <div class="kanban-col">
+          <div class="kanban-col-title hecho">✅ Completadas (12)</div>
+          <div class="k-card" style="opacity:0.7;">
+            <div class="k-card-title">Vacuna Fiebre Aftosa</div>
+            <div class="k-card-meta">📅 30 may · 22 bovinos ✓</div>
+            <div class="k-card-footer"><span class="pill pill-gris">Hecho</span><span style="font-size:0.72rem;color:var(--gris-texto);">Veterinario</span></div>
+          </div>
+          <div class="k-card" style="opacity:0.7;">
+            <div class="k-card-title">Venta plátano hartón</div>
+            <div class="k-card-meta">📅 28 may · 18 racimos · $360.000</div>
+            <div class="k-card-footer"><span class="pill pill-gris">Hecho</span><span style="font-size:0.72rem;color:var(--gris-texto);">Jairo O.</span></div>
+          </div>
+          <div class="k-card" style="opacity:0.7;">
+            <div class="k-card-title">Análisis de suelo Lote C</div>
+            <div class="k-card-meta">📅 25 may · Resultados OK</div>
+            <div class="k-card-footer"><span class="pill pill-gris">Hecho</span><span style="font-size:0.72rem;color:var(--gris-texto);">Jairo O.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ GASTOS ══════ -->
+    <div class="page" id="page-gastos">
+      <div class="page-title">💰 Gastos y Finanzas</div>
+      <div class="page-sub">Control de costos y rentabilidad — Junio 2025</div>
+
+      <div class="stats-grid">
+        <div class="stat-card accent-verde"><div class="stat-label">Ingresos mes</div><div class="stat-icon">💵</div><div class="stat-value">$4.820.000</div></div>
+        <div class="stat-card"><div class="stat-label">Gastos mes</div><div class="stat-icon">📤</div><div class="stat-value">$2.340.000</div></div>
+        <div class="stat-card accent-naranja"><div class="stat-label">Utilidad neta</div><div class="stat-icon">📊</div><div class="stat-value">$2.480.000</div><div class="stat-delta" style="color:#fff;">Margen: 51%</div></div>
+        <div class="stat-card"><div class="stat-label">Costo/litro leche</div><div class="stat-icon">🥛</div><div class="stat-value">$580</div><div class="stat-delta up">Meta: &lt; $620</div></div>
+      </div>
+
+      <div class="grid-6-4">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Libro de gastos — Junio 2025</span>
+            <button class="btn-naranja" style="font-size:0.78rem;padding:0.45rem 1.1rem;">+ Registrar gasto</button>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th>Cantidad</th><th>Total</th><th>Responsable</th></tr></thead>
+            <tbody>
+              <tr><td>01 jun</td><td><span class="pill pill-verde">Alim. animal</span></td><td>Concentrado 18% × 10 btos</td><td>10</td><td>$820.000</td><td>Jairo</td></tr>
+              <tr><td>30 may</td><td><span class="pill pill-naranja">Sanidad</span></td><td>Vacuna Aftosa × 22 dosis</td><td>22</td><td>$92.400</td><td>Veterinario</td></tr>
+              <tr><td>28 may</td><td><span class="pill pill-gris">Mano de obra</span></td><td>Jornal deshierbe plátano × 2</td><td>2</td><td>$100.000</td><td>Pedro</td></tr>
+              <tr><td>25 may</td><td><span class="pill pill-verde">Fertilizante</span></td><td>Urea 46% × 100 kg</td><td>100 kg</td><td>$220.000</td><td>Jairo</td></tr>
+              <tr><td>20 may</td><td><span class="pill pill-gris">Transporte</span></td><td>Flete insumos Manizales</td><td>1 viaje</td><td>$80.000</td><td>Jairo</td></tr>
+              <tr style="font-weight:700;background:var(--gris-claro)"><td colspan="4">Total registrado</td><td>$1.312.400</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Gastos por categoría</span></div>
+          <div class="donut-wrap" style="height:180px;">
+            <canvas id="chartGastos"></canvas>
+          </div>
+          <div style="margin-top:1rem;">
+            <div class="progress-row"><span class="progress-label" style="width:130px;">Alim. animal</span><div class="progress-bar"><div class="progress-fill" style="width:62%;background:var(--verde);"></div></div><span class="progress-pct">62%</span></div>
+            <div class="progress-row"><span class="progress-label" style="width:130px;">Mano de obra</span><div class="progress-bar"><div class="progress-fill" style="width:18%;background:var(--naranja);"></div></div><span class="progress-pct">18%</span></div>
+            <div class="progress-row"><span class="progress-label" style="width:130px;">Insumos agr.</span><div class="progress-bar"><div class="progress-fill" style="width:12%;background:var(--verde-claro);"></div></div><span class="progress-pct">12%</span></div>
+            <div class="progress-row"><span class="progress-label" style="width:130px;">Otros</span><div class="progress-bar"><div class="progress-fill" style="width:8%;background:#bbb;"></div></div><span class="progress-pct">8%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ CHATBOT ══════ -->
+    <div class="page" id="page-chatbot">
+      <div class="page-title">🤖 AgriBot IA</div>
+      <div class="page-sub">Su asistente agropecuario inteligente — disponible 24/7</div>
+
+      <div class="chat-container">
+        <div class="chat-top">
+          <div class="chat-bot-avatar">🌾</div>
+          <div>
+            <div class="chat-bot-name">AgriBot — Asistente de Finca</div>
+            <div class="chat-bot-status">● En línea · Listo para ayudarle</div>
+          </div>
+        </div>
+        <div class="chat-body">
+          <div>
+            <div class="chat-msg bot">¡Buenos días, Jairo! Soy AgriBot, su asistente agropecuario. Hoy detecto que tiene <strong>2 insumos con stock bajo</strong> y la vacunación de Aftosa está programada para el 18 de junio. ¿En qué le puedo ayudar?</div>
+            <div class="chat-msg-time">AgriBot · 5:00 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg user">¿Cuánto me cuesta producir un litro de leche este mes?</div>
+            <div class="chat-msg-time" style="text-align:right;">Usted · 7:12 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg bot">Con base en sus registros de junio: <br><br>
+              🥛 <strong>Producción:</strong> 186 L/día promedio<br>
+              💰 <strong>Gastos directos:</strong> $820.000 concentrado + $92.400 sanidad<br>
+              👷 <strong>Mano de obra:</strong> $180.000 estimado<br><br>
+              <strong>Costo actual: $580/litro</strong> ✅<br>
+              Está por debajo de su meta de $620/L. ¡Excelente gestión!
+            </div>
+            <div class="chat-msg-time">AgriBot · 7:12 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg user">¿Qué me recomiendas para la revisión de plagas en el cacao?</div>
+            <div class="chat-msg-time" style="text-align:right;">Usted · 7:15 AM</div>
+          </div>
+          <div>
+            <div class="chat-msg bot">Para el cacao CCN-51 en esta época del año le recomiendo revisar:<br><br>
+              🐛 <strong>Moniliasis:</strong> busque frutos con manchas acuosas. Retire y entierre los afectados.<br>
+              🪲 <strong>Broca del fruto:</strong> coloque trampas con feromona cada 20 m.<br>
+              🍂 <strong>Escoba de bruja:</strong> pode cojines florales enfermos con tijera desinfectada.<br><br>
+              Frecuencia recomendada: <strong>cada 15 días</strong> en época de lluvia. ¿Desea que le recuerde esta labor?
+            </div>
+            <div class="chat-msg-time">AgriBot · 7:15 AM</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" placeholder="Escríbale a AgriBot..."/>
+          <button class="chat-send">➤</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+/* ── NAVEGACIÓN ── */
+const pages = {
+  dashboard:  { title: 'Dashboard General',       top: 'Dashboard General' },
+  cultivos:   { title: '🌱 Cultivos',              top: 'Cultivos — Gestión de lotes' },
+  animales:   { title: '🐄 Animales',              top: 'Animales — Hato ganadero' },
+  inventario: { title: '📦 Inventario',            top: 'Inventario — Bodega e insumos' },
+  labores:    { title: '📋 Labores',               top: 'Labores — Semana 2–8 jun' },
+  gastos:     { title: '💰 Gastos y Finanzas',     top: 'Gastos — Junio 2025' },
+  chatbot:    { title: '🤖 AgriBot IA',            top: 'AgriBot — Asistente IA' },
+};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    if (btn.getAttribute('onclick').includes(id)) btn.classList.add('active');
+  });
+  document.getElementById('topbarTitle').textContent = pages[id].top;
+}
+
+/* ── CHART: Ingresos vs Gastos ── */
+new Chart(document.getElementById('chartIngGas'), {
+  type: 'bar',
+  data: {
+    labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio'],
+    datasets: [
+      { label: 'Ingresos', data: [3200,3450,3800,4100,4080,4820],
+        backgroundColor: '#1a7835', borderRadius: 8, borderSkipped: false },
+      { label: 'Gastos',   data: [2100,2200,2050,2400,2210,2340],
+        backgroundColor: '#f5a520', borderRadius: 8, borderSkipped: false },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { font: { family: 'Poppins', size: 11 }, boxWidth: 12 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { family: 'Poppins', size: 11 } } },
+      y: { grid: { color: '#f0f4ee' }, ticks: { font: { family: 'Poppins', size: 11 },
+           callback: v => '$' + (v/1000).toFixed(0) + 'k' } }
+    }
+  }
+});
+
+/* ── CHART: Donut distribución ── */
+new Chart(document.getElementById('chartDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Alim. animal','Mano de obra','Insumos agr.','Otros'],
+    datasets: [{ data: [62,18,12,8],
+      backgroundColor: ['#1a7835','#f5a520','#5dbf4e','#cce4c0'],
+      borderWidth: 0, hoverOffset: 6 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '68%',
+    plugins: { legend: { position: 'bottom',
+      labels: { font: { family: 'Poppins', size: 10 }, boxWidth: 10, padding: 8 } } }
+  }
+});
+
+/* ── CHART: Gastos donut ── */
+new Chart(document.getElementById('chartGastos'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Alim. animal','Mano de obra','Insumos agr.','Otros'],
+    datasets: [{ data: [62,18,12,8],
+      backgroundColor: ['#1a7835','#f5a520','#5dbf4e','#cce4c0'],
+      borderWidth: 0, hoverOffset: 6 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '68%',
+    plugins: { legend: { display: false } }
+  }
+});
+</script>
+</body>
+</html>
