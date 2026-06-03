@@ -150,7 +150,7 @@ body {
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 780px;
+  max-width: 960px;
   width: 100%;
   margin-left: clamp(1.5rem, 8vw, 7rem);
 }
@@ -193,7 +193,7 @@ body {
 
 .hero h1,
 .hero-title {
-  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
   font-weight: 700;
   line-height: 1.08;
   letter-spacing: -0.02em;
