@@ -3,20 +3,14 @@
 
 {% block content %}
 
-<!-- CHIP FLOTANTE -->
-<div class="chip-float" id="chip">
-  📈 +15% Rentabilidad Promedio
-</div>
-
-<!-- HERO -->
+<!-- ═══════════ HERO ═══════════ -->
 <section class="hero">
   <div class="hero-bg">
     <img src="{{ url_for('static', filename='img/hero-campo.jpg') }}" alt="Campo agrícola al amanecer"/>
   </div>
   <div class="hero-content">
-    <div class="hero-badge">
-      <span class="dot"></span>
-      La herramienta del campo
+    <div class="section-label" style="color:var(--lima); letter-spacing:2.5px;">
+      La herramienta del campo colombiano
     </div>
     <h1 class="hero-title">
       Sepa por fin si su finca le da <em>ganancia o pérdida,</em>
@@ -26,43 +20,40 @@
       La herramienta digital más sencilla para que el pequeño productor tome el control
       de su negocio desde el celular. Cultivos, animales, inventario y gastos en un solo lugar.
     </p>
-    <div class="hero-tags">
-      <span class="tag">🌱 Cultivos</span>
-      <span class="tag">🐄 Animales</span>
-      <span class="tag">📦 Inventario</span>
-      <span class="tag">📋 Labores</span>
-      <span class="tag">💰 Gastos</span>
-    </div>
     <div class="hero-btns">
-      <a href="#modulos" class="btn btn-primary">
-        🚀 Explorar módulos
-      </a>
-      <a href="#como-funciona" class="btn-secondary btn-outline">
-        ¿Cómo funciona?
-      </a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="num">+3.200</div>
-        <div class="lbl">Productores activos</div>
-      </div>
-      <div class="hero-stat">
-        <div class="num">+24%</div>
-        <div class="lbl">Mejora en decisiones</div>
-      </div>
-      <div class="hero-stat">
-        <div class="num">$0</div>
-        <div class="lbl">Para empezar</div>
-      </div>
+      <a href="#modulos" class="btn btn-primary">🚀 Explorar módulos</a>
+      <a href="#como-funciona" class="btn-secondary btn-outline">¿Cómo funciona?</a>
     </div>
   </div>
 </section>
 
-<!-- VALUE PROP -->
+<!-- ═══════════ STATS BAR ═══════════ -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-item reveal reveal-d1">
+      <span class="num">+3.200</span>
+      <span class="lbl">Productores activos</span>
+    </div>
+    <div class="stat-item reveal reveal-d2">
+      <span class="num">5</span>
+      <span class="lbl">Módulos integrados</span>
+    </div>
+    <div class="stat-item reveal reveal-d3">
+      <span class="num">24/7</span>
+      <span class="lbl">AgriBot disponible</span>
+    </div>
+    <div class="stat-item reveal reveal-d4">
+      <span class="num">$0</span>
+      <span class="lbl">Para empezar</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ VALUE PROP ═══════════ -->
 <section class="value">
   <div class="value-inner">
-    <div class="value-text">
-      <div class="section-label">El Legado Digital</div>
+    <div class="value-text reveal">
+      <div class="section-label">Para el productor colombiano</div>
       <h2 class="section-title">
         Para el pequeño productor que lleva sus cuentas <em>en papel.</em>
       </h2>
@@ -81,137 +72,100 @@
       </div>
       <div class="value-check">
         <div class="check-icon">✓</div>
-        <span>Registros de cultivos, animales, gastos y labores.</span>
+        <span>Cultivos, animales, gastos y labores integrados.</span>
       </div>
       <div class="value-check">
         <div class="check-icon">✓</div>
         <span>AgriBot IA responde sus dudas del campo.</span>
       </div>
     </div>
-    <div class="value-img">
+    <div class="value-img reveal reveal-d2">
       <div class="blob"></div>
       <img src="{{ url_for('static', filename='img/value-agricultor.jpg') }}" alt="Agricultor revisando cultivos"/>
     </div>
   </div>
 </section>
 
-<!-- MÓDULOS -->
+<!-- ═══════════ MÓDULOS ═══════════ -->
 <section class="section" id="modulos">
   <div style="max-width:1080px; margin:0 auto;">
-    <div class="section-label">Módulos</div>
-    <h2 class="section-title">Herramientas hechas <em>para usted</em></h2>
-    <p class="section-subtitle">Todo lo que necesita para administrar su finca de forma ordenada y eficiente.</p>
+    <div style="text-align:center; max-width:720px; margin:0 auto 3.5rem;" class="reveal">
+      <div class="section-label">Módulos</div>
+      <h2 class="section-title">Herramientas hechas <em>para usted</em></h2>
+      <p class="section-subtitle">Todo lo que necesita para administrar su finca de forma ordenada y eficiente.</p>
+    </div>
 
     <div class="card-container">
-      <div class="card">
-        <div class="card-icon">🌱</div>
+      <div class="card reveal reveal-d1">
+        <span class="card-icon">🌱</span>
         <h3>Cultivos</h3>
         <p>Siembra, riego, fertilización, control de plagas y seguimiento de cosechas.</p>
         <a href="/cultivos">Ver módulo →</a>
       </div>
-      <div class="card">
-        <div class="card-icon">🐄</div>
+      <div class="card reveal reveal-d2">
+        <span class="card-icon">🐄</span>
         <h3>Animales</h3>
         <p>Alimentación, sanidad, vacunación y seguimiento de producción pecuaria.</p>
         <a href="/animales">Ver módulo →</a>
       </div>
-      <div class="card">
-        <div class="card-icon">📦</div>
+      <div class="card reveal reveal-d3">
+        <span class="card-icon">📦</span>
         <h3>Inventario</h3>
         <p>Control de insumos, herramientas, medicamentos y bodega de la finca.</p>
         <a href="/inventario">Ver módulo →</a>
       </div>
-      <div class="card">
-        <div class="card-icon">📋</div>
+      <div class="card reveal reveal-d1">
+        <span class="card-icon">📋</span>
         <h3>Labores</h3>
         <p>Programación de actividades, asignación de tareas y calendario de finca.</p>
         <a href="/labores">Ver módulo →</a>
       </div>
-      <div class="card">
-        <div class="card-icon">💰</div>
+      <div class="card reveal reveal-d2">
+        <span class="card-icon">💰</span>
         <h3>Gastos</h3>
         <p>Registro de costos, análisis de rentabilidad y control del flujo de caja.</p>
         <a href="/gastos">Ver módulo →</a>
       </div>
-      <div class="card">
-        <div class="card-icon">🤖</div>
-        <h3>AgriBot</h3>
-        <p>Consulta al asistente virtual sobre cualquier tema de tu finca en cualquier momento.</p>
+      <div class="card reveal reveal-d3">
+        <span class="card-icon">🤖</span>
+        <h3>AgriBot IA</h3>
+        <p>Consulte al asistente virtual sobre cualquier tema de su finca en cualquier momento.</p>
         <a href="#" onclick="document.getElementById('chat-toggle').click(); return false;">Abrir chat →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES BENTO -->
-<section class="features section-alt">
-  <div class="features-inner">
-    <div class="features-header">
-      <div class="section-label">Beneficios</div>
-      <h2 class="section-title">Ventajas que <em>cambian su finca</em></h2>
-    </div>
-    <div class="bento-grid">
-      <!-- Card ancha: registro simple -->
-      <div class="bento-card">
-        <div class="bento-icon">➕</div>
-        <h3>Registro Simple</h3>
-        <p>Anote labores, gastos e insumos en segundos. No necesita ser experto en computadores, solo su dedo para marcar lo que hizo hoy en el campo.</p>
-      </div>
-      <!-- Card verde: rentabilidad -->
-      <div class="bento-card verde">
-        <div class="bento-icon">📊</div>
-        <h3>Rentabilidad Real</h3>
-        <p>Sepa si está ganando o perdiendo con reportes visuales instantáneos.</p>
-      </div>
-      <!-- Card naranja: IA -->
-      <div class="bento-card naranja">
-        <div class="bento-icon">🤖</div>
-        <h3>Asesor en el Bolsillo</h3>
-        <p>Pregúntele a AgriBot sobre dudas técnicas de sus cultivos, plagas o cómo mejorar sus ventas.</p>
-      </div>
-      <!-- Card crema: stat principal -->
-      <div class="bento-card crema" style="grid-column: 1 / -1; display:flex; align-items:center; gap:2rem; flex-wrap:wrap;">
-        <div style="flex-shrink:0;">
-          <div class="bento-big-num">+24% 📈</div>
-          <div class="bento-tag oscuro">Éxito del Productor</div>
-        </div>
-        <p style="flex:1; min-width:220px;">
-          Nuestros usuarios reportan una mejora inmediata en la toma de decisiones
-          al visualizar sus costos reales por primera vez.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CÓMO FUNCIONA -->
-<section class="section" id="como-funciona">
+<!-- ═══════════ CÓMO FUNCIONA ═══════════ -->
+<section class="section section-alt" id="como-funciona">
   <div style="max-width:1080px; margin:0 auto;">
-    <div class="section-label">Proceso</div>
-    <h2 class="section-title">Tres pasos para tomar el <em>control de su finca</em></h2>
-    <p class="section-subtitle">Sin complicaciones, desde el primer día.</p>
+    <div style="text-align:center; max-width:720px; margin:0 auto 3.5rem;" class="reveal">
+      <div class="section-label">Proceso</div>
+      <h2 class="section-title">Tres pasos para tomar el <em>control de su finca</em></h2>
+      <p class="section-subtitle">Sin complicaciones, desde el primer día.</p>
+    </div>
 
     <div class="info-grid">
-      <div class="info-block">
+      <div class="info-block reveal reveal-d1">
         <h3>📝 1. Registra</h3>
-        <p>Anota cada actividad, gasto, ingreso y novedad de la finca. Lo que no se registra no se puede mejorar ni controlar.</p>
+        <p>Anote cada actividad, gasto, ingreso y novedad de la finca. Lo que no se registra no se puede mejorar ni controlar.</p>
       </div>
-      <div class="info-block">
+      <div class="info-block reveal reveal-d2">
         <h3>📊 2. Analiza</h3>
-        <p>Revisa los indicadores clave: rendimiento por hectárea, costo por unidad producida y margen de ganancia por actividad.</p>
+        <p>Revise los indicadores clave: rendimiento por hectárea, costo por unidad producida y margen de ganancia por actividad.</p>
       </div>
-      <div class="info-block">
+      <div class="info-block reveal reveal-d3">
         <h3>✅ 3. Decide</h3>
-        <p>Con información ordenada, toma decisiones sobre qué sembrar, cuándo invertir, qué mejorar y cómo crecer de forma sostenible.</p>
+        <p>Con información ordenada, tome decisiones sobre qué sembrar, cuándo invertir y cómo crecer de forma sostenible.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- ═══════════ PRICING ═══════════ -->
 <section class="pricing">
   <div class="pricing-inner">
-    <div class="pricing-header">
+    <div class="pricing-header reveal">
       <div class="section-label">Freemium — Dos Versiones</div>
       <h2 class="section-title">Planes para <em>Crecer Juntos</em></h2>
       <p class="section-sub">Sin letras pequeñas, diseñado para el campo.</p>
@@ -219,7 +173,7 @@
     <div class="pricing-grid">
 
       <!-- PLAN GRATUITO -->
-      <div class="price-card">
+      <div class="price-card reveal reveal-d1">
         <div class="price-plan">Plan Gratuito</div>
         <div class="price-tier-badge price-tier-basic">Básico</div>
         <div class="price-amount">$0</div>
@@ -236,7 +190,7 @@
       </div>
 
       <!-- PLAN PREMIUM -->
-      <div class="price-card featured">
+      <div class="price-card featured reveal reveal-d2">
         <div class="featured-badge">RECOMENDADO</div>
         <div class="price-plan">Plan Premium</div>
         <div class="price-tier-badge price-tier-advanced">⭐ Avanzado</div>
@@ -259,10 +213,10 @@
   </div>
 </section>
 
-<!-- DEMO APP -->
+<!-- ═══════════ DEMO APP ═══════════ -->
 <section class="demo-section">
   <div class="demo-inner">
-    <div class="demo-header">
+    <div class="demo-header reveal">
       <div class="section-label">Vista previa</div>
       <h2 class="section-title">La app que <em>cabe en su bolsillo</em></h2>
       <p class="section-sub">Así se ve AdminAgro en su celular. Sencillo, claro y listo para usar desde el primer día.</p>
@@ -277,17 +231,14 @@
           <div class="pf-notch"></div>
           <div class="pf-status"><span>9:41</span><span>📶 🔋</span></div>
           <div class="pf-content">
-
             <div class="pf-topbar">
               <img src="{{ url_for('static', filename='img/AdminAgro-Logo.png') }}" alt="AdminAgro" class="pf-logo"/>
               <span class="pf-badge">⭐ Premium</span>
             </div>
-
             <div class="pf-greeting">
               <div class="pf-greeting-name">👋 Buenos días, Jairo</div>
               <div class="pf-greeting-sub">Finca El Porvenir · Villamaría, Caldas</div>
             </div>
-
             <div class="pf-stats-row">
               <div class="pf-stat pf-stat-verde">
                 <div class="pf-stat-lbl">Ingresos</div>
@@ -305,22 +256,18 @@
                 <div class="pf-stat-delta pf-up">↑ 12 L</div>
               </div>
             </div>
-
             <div class="pf-panel">
               <div class="pf-panel-title">Actividad reciente</div>
               <div class="pf-act"><span class="pf-act-ico">🥛</span><span class="pf-act-info">Ordeño matutino</span><span class="pf-act-val pos">+$148.800</span></div>
               <div class="pf-act"><span class="pf-act-ico">🌿</span><span class="pf-act-info">Compra Urea 46%</span><span class="pf-act-val neg">-$220.000</span></div>
               <div class="pf-act"><span class="pf-act-ico">🌱</span><span class="pf-act-info">Venta plátano</span><span class="pf-act-val pos">+$360.000</span></div>
-              <div class="pf-act"><span class="pf-act-ico">💊</span><span class="pf-act-info">Vacuna Aftosa</span><span class="pf-act-val neg">-$88.000</span></div>
             </div>
-
             <div class="pf-panel">
               <div class="pf-panel-title">Rentabilidad</div>
               <div class="pf-prog"><span class="pf-prog-lbl">🥛 Lechería</span><div class="pf-prog-bar"><div style="width:82%;background:var(--verde);"></div></div><span class="pf-prog-pct">82%</span></div>
               <div class="pf-prog"><span class="pf-prog-lbl">🌿 Cacao</span><div class="pf-prog-bar"><div style="width:74%;background:var(--naranja);"></div></div><span class="pf-prog-pct">74%</span></div>
               <div class="pf-prog"><span class="pf-prog-lbl">🌱 Plátano</span><div class="pf-prog-bar"><div style="width:67%;background:var(--verde-claro);"></div></div><span class="pf-prog-pct">67%</span></div>
             </div>
-
           </div>
           <div class="pf-bottomnav">
             <div class="pf-navbtn active"><span>🏠</span>Inicio</div>
@@ -339,12 +286,10 @@
           <div class="pf-notch"></div>
           <div class="pf-status"><span>9:41</span><span>📶 🔋</span></div>
           <div class="pf-content">
-
             <div class="pf-topbar">
               <span class="pf-screen-title">💰 Gastos</span>
               <span class="pf-badge pf-badge-naranja">+ Registrar</span>
             </div>
-
             <div class="pf-stats-row">
               <div class="pf-stat pf-stat-verde">
                 <div class="pf-stat-lbl">Ingresos</div>
@@ -359,7 +304,6 @@
                 <div class="pf-stat-val">$2,48M</div>
               </div>
             </div>
-
             <div class="pf-panel">
               <div class="pf-panel-title">Distribución de gastos</div>
               <div class="pf-prog"><span class="pf-prog-lbl">Alim. animal</span><div class="pf-prog-bar"><div style="width:62%;background:var(--verde);"></div></div><span class="pf-prog-pct">62%</span></div>
@@ -367,15 +311,12 @@
               <div class="pf-prog"><span class="pf-prog-lbl">Insumos agr.</span><div class="pf-prog-bar"><div style="width:12%;background:var(--verde-claro);"></div></div><span class="pf-prog-pct">12%</span></div>
               <div class="pf-prog"><span class="pf-prog-lbl">Otros</span><div class="pf-prog-bar"><div style="width:8%;background:#bbb;"></div></div><span class="pf-prog-pct">8%</span></div>
             </div>
-
             <div class="pf-panel">
               <div class="pf-panel-title">Últimos gastos</div>
               <div class="pf-act"><span class="pf-act-ico">🌾</span><span class="pf-act-info">Concentrado 18%</span><span class="pf-act-val neg">-$820.000</span></div>
               <div class="pf-act"><span class="pf-act-ico">💊</span><span class="pf-act-info">Vacuna Aftosa ×22</span><span class="pf-act-val neg">-$92.400</span></div>
               <div class="pf-act"><span class="pf-act-ico">👷</span><span class="pf-act-info">Jornales deshierbe</span><span class="pf-act-val neg">-$100.000</span></div>
-              <div class="pf-act"><span class="pf-act-ico">🌿</span><span class="pf-act-info">Urea 46% 100 kg</span><span class="pf-act-val neg">-$220.000</span></div>
             </div>
-
           </div>
           <div class="pf-bottomnav">
             <div class="pf-navbtn"><span>🏠</span>Inicio</div>
@@ -394,7 +335,6 @@
           <div class="pf-notch"></div>
           <div class="pf-status"><span>9:41</span><span>📶 🔋</span></div>
           <div class="pf-content pf-content-chat">
-
             <div class="pf-chat-top">
               <span style="font-size:1.3rem;">🌾</span>
               <div>
@@ -402,22 +342,19 @@
                 <div class="pf-chat-status">● En línea</div>
               </div>
             </div>
-
             <div class="pf-chat-body">
-              <div class="pf-msg pf-msg-bot">¡Buenos días, Jairo! Detecto <strong>2 insumos con stock bajo</strong>. Vacunación Aftosa el 18 jun. ¿En qué le ayudo?</div>
+              <div class="pf-msg pf-msg-bot">¡Buenos días, Jairo! Detecto <strong>2 insumos con stock bajo</strong>. ¿En qué le ayudo?</div>
               <div class="pf-msg pf-msg-user">¿Cuánto me cuesta producir un litro de leche?</div>
-              <div class="pf-msg pf-msg-bot">Con sus registros de junio:<br><br>🥛 <b>186 L/día</b><br>💰 Concentrado: $820.000<br>💊 Sanidad: $92.400<br><br><b>Costo actual: $580/litro ✅</b><br>¡Bajo su meta de $620!</div>
+              <div class="pf-msg pf-msg-bot">Con sus registros de junio:<br><br>🥛 <b>186 L/día</b><br>💰 Costo: $580/litro ✅<br>¡Bajo su meta de $620!</div>
               <div class="pf-msg pf-msg-user">¿Plagas en el cacao?</div>
-              <div class="pf-msg pf-msg-bot">Revise cada 15 días:<br>🐛 Moniliasis: retire frutos<br>🪲 Broca: trampas feromona<br>🍂 Escoba: pode cojines<br><br>¿Le programo la alerta?</div>
+              <div class="pf-msg pf-msg-bot">Revise cada 15 días:<br>🐛 Moniliasis: retire frutos<br>🪲 Broca: trampas feromona<br><br>¿Le programo la alerta?</div>
               <div class="pf-msg pf-msg-user">Sí, programa la alerta</div>
-              <div class="pf-msg pf-msg-bot">✅ ¡Listo! Próxima alerta: <b>17 de junio</b>. La recibirá como notificación.</div>
+              <div class="pf-msg pf-msg-bot">✅ ¡Listo! Próxima alerta: <b>17 de junio</b>.</div>
             </div>
-
             <div class="pf-chat-input">
               <div class="pf-chat-inputbox">Pregúntele a AgriBot...</div>
               <div class="pf-chat-send">➤</div>
             </div>
-
           </div>
           <div class="pf-bottomnav">
             <div class="pf-navbtn"><span>🏠</span>Inicio</div>
@@ -443,23 +380,9 @@
   </div>
 </section>
 
-<!-- INSTITUTIONAL -->
-<section class="institutional">
-  <div class="inst-box">
-    <div class="inst-icon">👥</div>
-    <div>
-      <h2>Soluciones para Cooperativas e Instituciones</h2>
-      <p>Las asociaciones y cooperativas pueden adquirir suscripciones corporativas para todos sus productores. Obtenga datos agregados para mejorar la productividad de toda la región mientras ayuda a sus miembros a ser rentables.</p>
-      <a class="inst-link" href="#">
-        Contactar área institucional →
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIOS SLIDER -->
+<!-- ═══════════ TESTIMONIOS ═══════════ -->
 <section class="testimonial">
-  <div class="testi-header">
+  <div class="testi-header reveal">
     <div class="section-label">Testimonios</div>
     <h2 class="section-title">Lo que dicen <em>nuestros productores</em></h2>
     <p class="section-sub">Historias reales de quienes ya tomaron el control de su finca.</p>
@@ -468,16 +391,11 @@
   <div class="testi-slider-wrap">
     <div class="testi-track" id="testiTrack">
 
-      <!-- Testimonio 1 — Plan Gratuito -->
       <div class="testi-slide">
         <div class="testi-card">
           <div class="testi-plan-badge testi-badge-free">Plan Gratuito</div>
           <div class="quote-icon">"</div>
-          <p class="testi-text">
-            Antes llenaba tres cuadernos al año y al final nunca sabía cuánto me quedaba limpio
-            después de vender la cosecha. Con AdminAgro, guardé el lápiz y ahora desde el cafetal
-            registro todo en segundos. ¡Por fin sé qué me da plata y qué no!
-          </p>
+          <p class="testi-text">Antes llenaba tres cuadernos al año y al final nunca sabía cuánto me quedaba limpio después de vender la cosecha. Con AdminAgro, guardé el lápiz y ahora desde el cafetal registro todo en segundos. ¡Por fin sé qué me da plata y qué no!</p>
           <div class="testi-author">
             <div class="testi-avatar">🧑‍🌾</div>
             <div>
@@ -488,16 +406,11 @@
         </div>
       </div>
 
-      <!-- Testimonio 2 — Plan Premium -->
       <div class="testi-slide">
         <div class="testi-card">
           <div class="testi-plan-badge testi-badge-premium">⭐ Plan Premium</div>
           <div class="quote-icon">"</div>
-          <p class="testi-text">
-            Tengo 45 reses y nunca había podido llevar bien los costos de cada animal.
-            Con el Premium exporto el reporte mensual a Excel y se lo muestro al banco
-            cuando necesito crédito. Me lo aprobaron en 3 días porque tenía los números claros.
-          </p>
+          <p class="testi-text">Tengo 45 reses y nunca había podido llevar bien los costos de cada animal. Con el Premium exporto el reporte mensual a Excel y se lo muestro al banco cuando necesito crédito. Me lo aprobaron en 3 días porque tenía los números claros.</p>
           <div class="testi-author">
             <div class="testi-avatar">🐄</div>
             <div>
@@ -508,16 +421,11 @@
         </div>
       </div>
 
-      <!-- Testimonio 3 — Plan Gratuito -->
       <div class="testi-slide">
         <div class="testi-card">
           <div class="testi-plan-badge testi-badge-free">Plan Gratuito</div>
           <div class="quote-icon">"</div>
-          <p class="testi-text">
-            Soy pequeño agricultor de papa y con el plan gratuito ya me alcanza para
-            registrar mis gastos y mis ventas. Ahora sé exactamente cuánto me cuesta
-            producir un bulto y cuánto gano. Antes solo adivinaba.
-          </p>
+          <p class="testi-text">Soy pequeño agricultor de papa y con el plan gratuito ya me alcanza para registrar mis gastos y mis ventas. Ahora sé exactamente cuánto me cuesta producir un bulto y cuánto gano. Antes solo adivinaba.</p>
           <div class="testi-author">
             <div class="testi-avatar">🥔</div>
             <div>
@@ -528,16 +436,11 @@
         </div>
       </div>
 
-      <!-- Testimonio 4 — Plan Premium -->
       <div class="testi-slide">
         <div class="testi-card">
           <div class="testi-plan-badge testi-badge-premium">⭐ Plan Premium</div>
           <div class="quote-icon">"</div>
-          <p class="testi-text">
-            Manejo plátano y cacao en dos fincas distintas. El Premium me permite verlas
-            juntas y comparar cuál es más rentable. El chatbot AgriBot me avisó de una
-            plaga antes de que yo la notara. Me ahorré más de 2 millones en un solo ciclo.
-          </p>
+          <p class="testi-text">Manejo plátano y cacao en dos fincas distintas. El Premium me permite verlas juntas y comparar cuál es más rentable. El chatbot AgriBot me avisó de una plaga antes de que yo la notara. Me ahorré más de 2 millones en un solo ciclo.</p>
           <div class="testi-author">
             <div class="testi-avatar">🌿</div>
             <div>
@@ -548,16 +451,11 @@
         </div>
       </div>
 
-      <!-- Testimonio 5 — Plan Premium -->
       <div class="testi-slide">
         <div class="testi-card">
           <div class="testi-plan-badge testi-badge-premium">⭐ Plan Premium</div>
           <div class="quote-icon">"</div>
-          <p class="testi-text">
-            Las alertas inteligentes me cambiaron la vida. Recibí una notificación de que
-            mi inventario de fertilizante estaba por acabarse justo antes de la época de
-            abonada. Compré a tiempo, sin afanes ni sobrecostos. Eso solo ya paga el Premium.
-          </p>
+          <p class="testi-text">Las alertas inteligentes me cambiaron la vida. Recibí una notificación de que mi inventario de fertilizante estaba por acabarse justo antes de la época de abonada. Compré a tiempo, sin afanes ni sobrecostos. Eso solo ya paga el Premium.</p>
           <div class="testi-author">
             <div class="testi-avatar">🌽</div>
             <div>
@@ -568,17 +466,11 @@
         </div>
       </div>
 
-      <!-- Testimonio 6 — Plan Premium -->
       <div class="testi-slide">
         <div class="testi-card">
           <div class="testi-plan-badge testi-badge-premium">⭐ Plan Premium</div>
           <div class="quote-icon">"</div>
-          <p class="testi-text">
-            Tengo una asociación de 12 mujeres productoras de mora. Con el Premium llevamos
-            el historial de todas las fincas en un solo lugar. Al final del trimestre sacamos
-            el informe comparativo y decidimos juntas en qué mejorar. Nunca habíamos tenido
-            esa información tan ordenada.
-          </p>
+          <p class="testi-text">Tengo una asociación de 12 mujeres productoras de mora. Con el Premium llevamos el historial de todas las fincas en un solo lugar. Al final del trimestre sacamos el informe comparativo y decidimos juntas en qué mejorar.</p>
           <div class="testi-author">
             <div class="testi-avatar">🫐</div>
             <div>
@@ -589,17 +481,11 @@
         </div>
       </div>
 
-      <!-- Testimonio 7 — Plan Premium -->
       <div class="testi-slide">
         <div class="testi-card">
           <div class="testi-plan-badge testi-badge-premium">⭐ Plan Premium</div>
           <div class="quote-icon">"</div>
-          <p class="testi-text">
-            Llevaba 20 años adivinando cuánto me costaba producir un litro de leche.
-            Con los indicadores detallados del Premium lo supe en el primer mes: me costaba
-            $680 y lo vendía a $700. Cambié el manejo del pasto, reduje el concentrado
-            y bajé el costo a $580. Ahora sí hay negocio.
-          </p>
+          <p class="testi-text">Llevaba 20 años adivinando cuánto me costaba producir un litro de leche. Con los indicadores detallados del Premium lo supe en el primer mes. Cambié el manejo del pasto, reduje el concentrado y bajé el costo de $680 a $580. Ahora sí hay negocio.</p>
           <div class="testi-author">
             <div class="testi-avatar">🥛</div>
             <div>
@@ -612,7 +498,6 @@
 
     </div><!-- /testi-track -->
 
-    <!-- Controles -->
     <div class="testi-controls">
       <button class="testi-btn" id="testiBtnPrev" aria-label="Anterior">&#8592;</button>
       <div class="testi-dots" id="testiDots">
@@ -630,73 +515,62 @@
 </section>
 
 <script>
-  // Chip flotante
-  setTimeout(function () {
-    var chip = document.getElementById('chip');
-    if (chip) { chip.style.transition = 'opacity .6s'; chip.style.opacity = '0.85'; }
-  }, 4000);
-
-  // Testimonios slider
+  /* Testimonios slider */
   (function () {
-    var track  = document.getElementById('testiTrack');
-    var dots   = document.querySelectorAll('.testi-dot');
+    var track   = document.getElementById('testiTrack');
+    var dots    = document.querySelectorAll('.testi-dot');
     var btnPrev = document.getElementById('testiBtnPrev');
     var btnNext = document.getElementById('testiBtnNext');
-    var total  = dots.length;
+    var total   = dots.length;
     var current = 0;
     var autoTimer;
 
     function goTo(index) {
       current = (index + total) % total;
       track.style.transform = 'translateX(-' + (current * 100) + '%)';
-      dots.forEach(function(d, i) {
-        d.classList.toggle('active', i === current);
-      });
+      dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
     }
-
     function next() { goTo(current + 1); }
     function prev() { goTo(current - 1); }
-
-    function startAuto() {
-      autoTimer = setInterval(next, 9000);
-    }
-
-    function resetAuto() {
-      clearInterval(autoTimer);
-      startAuto();
-    }
+    function startAuto() { autoTimer = setInterval(next, 9000); }
+    function resetAuto() { clearInterval(autoTimer); startAuto(); }
 
     btnNext.addEventListener('click', function () { next(); resetAuto(); });
     btnPrev.addEventListener('click', function () { prev(); resetAuto(); });
-
     dots.forEach(function (dot, i) {
       dot.addEventListener('click', function () { goTo(i); resetAuto(); });
     });
 
-    // Swipe táctil
     var startX = 0;
-    track.addEventListener('touchstart', function (e) {
-      startX = e.touches[0].clientX;
-    }, { passive: true });
+    track.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
     track.addEventListener('touchend', function (e) {
       var diff = startX - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); resetAuto(); }
     }, { passive: true });
 
     startAuto();
-  })();
 
-  // Igualar altura de todas las tarjetas del slider
-  (function () {
+    /* Igualar altura de tarjetas */
     function equalizeCards() {
       var cards = document.querySelectorAll('.testi-card');
-      var maxH = 0;
+      var maxH  = 0;
       cards.forEach(function (c) { c.style.height = 'auto'; });
       cards.forEach(function (c) { maxH = Math.max(maxH, c.offsetHeight); });
       cards.forEach(function (c) { c.style.height = maxH + 'px'; });
     }
     equalizeCards();
     window.addEventListener('resize', equalizeCards);
+  })();
+
+  /* Scroll reveal */
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    var io  = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function (el) { io.observe(el); });
   })();
 </script>
 
