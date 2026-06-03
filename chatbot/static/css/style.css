@@ -434,17 +434,6 @@ body {
 
 .value-img { position: relative; }
 
-.value-img .blob {
-  position: absolute;
-  width: 90px;
-  height: 90px;
-  background: var(--lima-claro);
-  border-radius: 50%;
-  top: -16px;
-  left: -16px;
-  z-index: 0;
-  opacity: 0.55;
-}
 
 .value-img img {
   position: relative;
